@@ -1,0 +1,6 @@
+﻿namespace AzulGameEngine.Game.Models
+{
+    public class GameOptions
+    {
+    }
+}
