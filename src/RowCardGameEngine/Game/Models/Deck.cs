@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using LanguageExt;
-
 
 namespace RowCardGameEngine.Game.Models
 {
@@ -14,7 +12,7 @@ namespace RowCardGameEngine.Game.Models
         private const int NumberOfRanks = 9;
         private const int NumberOfSuits = 4;
 
-        readonly Queue<(Suits, Ranks)> deckQueue = new Queue<(Suits, Ranks)>();
+        readonly Queue<Card> deckQueue = new Queue<Card>();
 
         public Deck(Random rnd)
         {
@@ -30,44 +28,14 @@ namespace RowCardGameEngine.Game.Models
             return deckQueue.Count == 0;
         }
 
-        public Option<(Suits, Ranks)> DequeueCard()
+        public Option<Card> DequeueCard()
         {
             if (deckQueue.Count == 0)
             {
-                return Option<(Suits, Ranks)>.None;
+                return Option<Card>.None;
             }
 
             return deckQueue.Dequeue();
-        }
-
-        public static string ToString((Suits, Ranks) card)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append(card.Item1 switch
-            {
-                Suits.Clubs => "C",
-                Suits.Spades => "S",
-                Suits.Hearts => "H",
-                Suits.Diamonds => "D",
-                _ => ""
-            });
-
-            sb.Append(card.Item2 switch
-            {
-                Ranks.Ace => "A",
-                Ranks.King => "K",
-                Ranks.Queen => "Q",
-                Ranks.Jack => "J",
-                Ranks.Ten => "T",
-                Ranks.Nine => "9",
-                Ranks.Eight => "8",
-                Ranks.Seven => "7",
-                Ranks.Six => "6",
-                _ => ""
-            });
-
-            return sb.ToString();
         }
 
         private IEnumerable<int> CreateUniqueRandomNumbers()
@@ -84,12 +52,12 @@ namespace RowCardGameEngine.Game.Models
             }
         }
 
-        private (Suits, Ranks) Derive(int i)
+        private Card Derive(int i)
         {
             int rank = i % NumberOfRanks;
             int suit = i / NumberOfRanks;
 
-            return ((Suits)suit, (Ranks)rank);
+            return new Card((Suits)suit, (Ranks)rank);
         }
     }
 }

@@ -37,11 +37,10 @@ namespace RowCardGameEngine.Tests
             var deck = new Deck(rnd);
 
             // when
-            Option<(Suits, Ranks)> card = deck.DequeueCard();
+            Option<Card> card = deck.DequeueCard();
 
             // then
             Assert.True(card.IsSome);
-            card.IfSome(c => outputHelper.WriteLine(Deck.ToString(c)));
         }
     }
 }
