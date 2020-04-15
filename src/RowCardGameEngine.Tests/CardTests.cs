@@ -1,6 +1,4 @@
-﻿using System;
-using LanguageExt;
-using RowCardGameEngine.Game.Models;
+﻿using RowCardGameEngine.Game.Models;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,12 +8,10 @@ namespace RowCardGameEngine.Tests
     public class CardTests
     {
         private readonly ITestOutputHelper outputHelper;
-        private readonly Random rnd;
 
         public CardTests(ITestOutputHelper outputHelper)
         {
             this.outputHelper = outputHelper;
-            this.rnd = new Random(1);
         }
 
         [Fact(DisplayName = "Create Card")]
@@ -30,6 +26,7 @@ namespace RowCardGameEngine.Tests
             // then
             Assert.False(string.IsNullOrEmpty(result));
             Assert.True(expectedResult == result);
+            outputHelper.WriteLine(result);
         }
 
         [Fact(DisplayName = "Cards are equal")]
@@ -44,6 +41,20 @@ namespace RowCardGameEngine.Tests
 
             // then
             Assert.True(result);
+        }
+
+        [Fact(DisplayName = "Cards are not equal")]
+        public void ShouldConsiderCardsAsNotEqual()
+        {
+            // given
+
+            // when
+            var cardA = new Card(Suits.Hearts, Ranks.Jack);
+            var cardB = new Card(Suits.Hearts, Ranks.Ten);
+            var result = cardA == cardB;
+
+            // then
+            Assert.False(result);
         }
     }
 }

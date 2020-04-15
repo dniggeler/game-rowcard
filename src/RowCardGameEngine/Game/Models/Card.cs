@@ -6,20 +6,20 @@ namespace RowCardGameEngine.Game.Models
 {
     public class Card : Record<Card>
     {
-        private readonly Suits suit;
-        private readonly Ranks rank;
+        public readonly Suits Suit;
+        public readonly Ranks Rank;
 
         public Card(Suits suit, Ranks rank)
         {
-            this.suit = suit;
-            this.rank = rank;
+            this.Suit = suit;
+            this.Rank = rank;
         }
 
         public Option<string> AsPokerKey()
         {
             StringBuilder sb = new StringBuilder();
 
-            var suitStr = suit switch
+            var suitStr = Suit switch
             {
                 Suits.Clubs => "C",
                 Suits.Spades => "S",
@@ -28,7 +28,7 @@ namespace RowCardGameEngine.Game.Models
                 _ => Option<string>.None
             };
 
-            var rankStr = rank switch
+            var rankStr = Rank switch
             {
                 Ranks.Ace => "A",
                 Ranks.King => "K",
