@@ -13,6 +13,8 @@ namespace RowCardGameEngine.Game.Models
             this.numberOfCards = numberOfCards;
         }
 
+        public int Count => cards.Count;
+
         public bool IsEmpty => cards.Count == 0;
 
         public bool IsFull => cards.Count == numberOfCards;

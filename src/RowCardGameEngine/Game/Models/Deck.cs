@@ -12,7 +12,7 @@ namespace RowCardGameEngine.Game.Models
         private const int NumberOfRanks = 9;
         private const int NumberOfSuits = 4;
 
-        readonly Queue<Card> deckQueue = new Queue<Card>();
+        private readonly Queue<Card> deckQueue = new Queue<Card>();
 
         public Deck(Random rnd)
         {
@@ -22,6 +22,8 @@ namespace RowCardGameEngine.Game.Models
                 deckQueue.Enqueue(Derive(randomValue));
             }
         }
+
+        public int Count => deckQueue.Count;
 
         public bool IsEmpty()
         {
