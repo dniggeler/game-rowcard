@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LanguageExt;
+using Microsoft.Extensions.DependencyInjection;
 using RowCardGameEngine.Game.Models;
 using Xunit;
 using Xunit.Abstractions;
@@ -12,12 +13,16 @@ namespace RowCardGameEngine.Tests
     public class DeckTests
     {
         private readonly ITestOutputHelper outputHelper;
-        private readonly Random rnd;
+        private readonly ServiceProvider provider;
 
         public DeckTests(ITestOutputHelper outputHelper)
         {
             this.outputHelper = outputHelper;
-            this.rnd = new Random(1);
+
+            IServiceCollection collection = new ServiceCollection();
+            collection.AddServices();
+
+            provider = collection.BuildServiceProvider();
         }
 
         [Fact(DisplayName = "Create Deck")]
@@ -26,7 +31,7 @@ namespace RowCardGameEngine.Tests
             // given
 
             // when
-            var deck = new Deck(rnd);
+            var deck = provider.GetService<Deck>();
 
             // then
             Assert.False(deck.IsEmpty());
@@ -38,7 +43,7 @@ namespace RowCardGameEngine.Tests
             // given
 
             // when
-            var deck = new Deck(rnd);
+            var deck = provider.GetService<Deck>();
             List<Card> cards = new List<Card>();
             while (!deck.IsEmpty())
             {
@@ -61,7 +66,7 @@ namespace RowCardGameEngine.Tests
         public void ShouldRemoveCardFromDeck()
         {
             // given
-            var deck = new Deck(rnd);
+            var deck = provider.GetService<Deck>();
 
             // when
             Option<Card> card = deck.DequeueCard();
@@ -74,7 +79,7 @@ namespace RowCardGameEngine.Tests
         public void ShouldDistributeDeckToHands()
         {
             // given
-            var deck = new Deck(rnd);
+            var deck = provider.GetService<Deck>();
 
             List<Hand> hands = CreateHands(deck.Count).ToList();
 
