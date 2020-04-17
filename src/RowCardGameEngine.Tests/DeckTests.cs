@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LanguageExt;
-using Microsoft.Extensions.DependencyInjection;
 using RowCardGameEngine.Game.Models;
 using Xunit;
 using Xunit.Abstractions;
@@ -10,19 +8,15 @@ using Xunit.Abstractions;
 namespace RowCardGameEngine.Tests
 {
     [Trait("Game Engine", "Deck")]
-    public class DeckTests
+    public class DeckTests : IClassFixture<GameEngineFixture>
     {
         private readonly ITestOutputHelper outputHelper;
-        private readonly ServiceProvider provider;
+        private readonly GameEngineFixture _fixture;
 
-        public DeckTests(ITestOutputHelper outputHelper)
+        public DeckTests(ITestOutputHelper outputHelper, GameEngineFixture fixture)
         {
             this.outputHelper = outputHelper;
-
-            IServiceCollection collection = new ServiceCollection();
-            collection.AddServices();
-
-            provider = collection.BuildServiceProvider();
+            _fixture = fixture;
         }
 
         [Fact(DisplayName = "Create Deck")]
@@ -31,7 +25,7 @@ namespace RowCardGameEngine.Tests
             // given
 
             // when
-            var deck = provider.GetService<Deck>();
+            var deck = _fixture.GetService<Deck>();
 
             // then
             Assert.False(deck.IsEmpty());
@@ -43,7 +37,8 @@ namespace RowCardGameEngine.Tests
             // given
 
             // when
-            var deck = provider.GetService<Deck>();
+            var deck = _fixture.GetService<Deck>();
+
             List<Card> cards = new List<Card>();
             while (!deck.IsEmpty())
             {
@@ -66,9 +61,10 @@ namespace RowCardGameEngine.Tests
         public void ShouldRemoveCardFromDeck()
         {
             // given
-            var deck = provider.GetService<Deck>();
 
             // when
+            var deck = _fixture.GetService<Deck>();
+
             Option<Card> card = deck.DequeueCard();
 
             // then
@@ -79,11 +75,12 @@ namespace RowCardGameEngine.Tests
         public void ShouldDistributeDeckToHands()
         {
             // given
-            var deck = provider.GetService<Deck>();
+
+            // when
+            var deck = _fixture.GetService<Deck>();
 
             List<Hand> hands = CreateHands(deck.Count).ToList();
 
-            // when
             while (!deck.IsEmpty())
             {
                 foreach (var hand in hands)

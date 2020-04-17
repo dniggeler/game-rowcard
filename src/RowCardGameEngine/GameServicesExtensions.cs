@@ -19,6 +19,7 @@ namespace RowCardGameEngine
             collection.AddSingleton<ChatThread>();
             collection.AddSingleton<GameEngine>();
             collection.AddTransient<Deck>();
+            collection.AddSingleton<GameBoard>();
             collection.AddSingleton(provider => new Random(Seed));
         }
     }
