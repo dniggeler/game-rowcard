@@ -80,8 +80,29 @@ namespace RowCardGameEngine.Tests
             var success = board.SetStartingCard(startingCard).IsRight;
 
             success = success && board.PushCard(lowCard).IsRight;
+            success = success && board.PushCard(startCard).IsRight;
             success = success && board.PushCard(highCard).IsRight;
-            success = success && board.PushCard(startingCard).IsRight;
+
+            var result = success && !board.IsEmpty();
+
+            // then
+            Assert.True(result);
+        }
+
+        [Fact(DisplayName = "Fail to add card")]
+        public void ShouldFailToAddCard()
+        {
+            // given
+            Card startingCard = new Card(Suits.Clubs, Ranks.Seven);
+            Card highCard = new Card(Suits.Clubs, Ranks.Queen);
+
+            // when
+            var board = _fixture.GetService<GameBoard>();
+            board.Clear();
+
+            var success = board.SetStartingCard(startingCard).IsRight;
+
+            success = success && board.PushCard(highCard).IsLeft;
 
             var result = success && !board.IsEmpty();
 

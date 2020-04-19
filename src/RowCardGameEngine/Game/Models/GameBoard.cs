@@ -128,9 +128,10 @@ namespace RowCardGameEngine.Game.Models
             {
                 var valid = (compareCard - card)
                     .Map(Math.Abs)
-                    .Map(diff => diff == decimal.One);
+                    .Map(diff => diff == decimal.One)
+                    .IfNone(false);
 
-                if (valid.IsNone)
+                if (!valid)
                 {
                     return $"Difference of card {card.AsPokerKey()} compared to start card {compareCard.AsPokerKey()} not valid";
                 }
@@ -157,7 +158,5 @@ namespace RowCardGameEngine.Game.Models
         {
             return Enum.GetValues(typeof(Suits)).Cast<Suits>();
         }
-
-
     }
 }
