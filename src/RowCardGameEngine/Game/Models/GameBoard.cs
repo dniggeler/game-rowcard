@@ -69,7 +69,7 @@ namespace RowCardGameEngine.Game.Models
             return false;
         }
 
-        public Either<string, Unit> AddCard(Card card)
+        public Either<string, Unit> PushCard(Card card)
         {
             if (card == null)
             {
@@ -108,10 +108,37 @@ namespace RowCardGameEngine.Game.Models
 
         private Either<string, Unit> AddCardInternal(Card card)
         {
-            GetStack()
-                .Push(card);
+            var stack = GetStack(); // high or low
 
-            return Unit.Default;
+            if (stack.Count == 0)
+            {
+                Card startCard = startCards[card.Suit];
+
+                return PushCard(startCard);
+            }
+
+            if (stack.TryPeek(out Card popCard))
+            {
+                return PushCard(popCard);
+            }
+
+            return $"No stack card available for card {card.AsPokerKey()}";
+
+            Either<string, Unit> PushCard(Card compareCard)
+            {
+                var valid = (compareCard - card)
+                    .Map(Math.Abs)
+                    .Map(diff => diff == decimal.One);
+
+                if (valid.IsNone)
+                {
+                    return $"Difference of card {card.AsPokerKey()} compared to start card {compareCard.AsPokerKey()} not valid";
+                }
+
+                stack.Push(card);
+
+                return Unit.Default;
+            }
 
             Stack<Card> GetStack()
             {

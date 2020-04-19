@@ -79,9 +79,9 @@ namespace RowCardGameEngine.Tests
 
             var success = board.SetStartingCard(startingCard).IsRight;
 
-            success = success && board.AddCard(lowCard).IsRight;
-            success = success && board.AddCard(highCard).IsRight;
-            success = success && board.AddCard(startingCard).IsRight;
+            success = success && board.PushCard(lowCard).IsRight;
+            success = success && board.PushCard(highCard).IsRight;
+            success = success && board.PushCard(startingCard).IsRight;
 
             var result = success && !board.IsEmpty();
 
