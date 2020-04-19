@@ -15,6 +15,19 @@ namespace RowCardGameEngine.Game.Models
             this.Rank = rank;
         }
 
+        public static Option<int> operator -(Card card1, Option<Card> card2)
+        {
+            if (card1 == null)
+            {
+                return Option<int>.None;
+            }
+
+            return from c1 in Prelude.Some(card1)
+                from c2 in card2
+                where c1.Suit == c2.Suit
+                select c1.Rank - c2.Rank;
+        }
+
         public Option<string> AsPokerKey()
         {
             StringBuilder sb = new StringBuilder();
