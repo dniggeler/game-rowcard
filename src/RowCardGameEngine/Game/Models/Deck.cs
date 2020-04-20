@@ -27,6 +27,10 @@ namespace RowCardGameEngine.Game.Models
             }
         }
 
+        public static Ranks MinRank => Ranks.Six;
+
+        public static Ranks MaxRank => Ranks.Ace;
+
         public int Count => deckQueue.Count;
 
         public bool IsEmpty()

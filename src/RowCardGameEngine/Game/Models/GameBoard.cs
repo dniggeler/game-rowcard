@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LanguageExt;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace RowCardGameEngine.Game.Models
@@ -67,6 +68,46 @@ namespace RowCardGameEngine.Game.Models
             }
 
             return false;
+        }
+
+        public bool IsFull(Suits suit)
+        {
+            if (!startCards.ContainsKey(suit))
+            {
+                return false;
+            }
+
+            Ranks minRank = startCards[suit].Rank;
+            if (lowStacks.Count > 0)
+            {
+                var topCard = lowStacks[suit].Peek();
+                if (topCard.Rank < minRank)
+                {
+                    minRank = topCard.Rank;
+                }
+            }
+
+            if (minRank != Deck.MinRank)
+            {
+                return false;
+            }
+
+            Ranks maxRank = startCards[suit].Rank;
+            if (highStacks.Count > 0)
+            {
+                var topCard = highStacks[suit].Peek();
+                if (topCard.Rank > maxRank)
+                {
+                    maxRank = topCard.Rank;
+                }
+            }
+
+            if (maxRank != Deck.MaxRank)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public Either<string, Unit> PushCard(Card card)

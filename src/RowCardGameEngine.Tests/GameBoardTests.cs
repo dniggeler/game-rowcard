@@ -31,6 +31,21 @@ namespace RowCardGameEngine.Tests
             Assert.True(result);
         }
 
+        [Fact(DisplayName = "Is board full")]
+        public void ShouldReturnBoardIsNotFull()
+        {
+            // given
+
+            // when
+            var board = _fixture.GetService<GameBoard>();
+            board.Clear();
+
+            var result = board.IsFull(Suits.Clubs);
+
+            // then
+            Assert.False(result);
+        }
+
         [Fact(DisplayName = "Clear Board")]
         public void ShouldClearBoard()
         {
