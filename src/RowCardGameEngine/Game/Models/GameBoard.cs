@@ -78,7 +78,7 @@ namespace RowCardGameEngine.Game.Models
             }
 
             Ranks minRank = startCards[suit].Rank;
-            if (lowStacks.Count > 0)
+            if (lowStacks[suit].Count > 0)
             {
                 var topCard = lowStacks[suit].Peek();
                 if (topCard.Rank < minRank)
@@ -93,7 +93,7 @@ namespace RowCardGameEngine.Game.Models
             }
 
             Ranks maxRank = startCards[suit].Rank;
-            if (highStacks.Count > 0)
+            if (highStacks[suit].Count > 0)
             {
                 var topCard = highStacks[suit].Peek();
                 if (topCard.Rank > maxRank)

@@ -35,15 +35,34 @@ namespace RowCardGameEngine.Tests
         public void ShouldReturnBoardIsNotFull()
         {
             // given
+            Card startingCard = new Card(Suits.Hearts, Ranks.Ace);
+            Card card6 = new Card(Suits.Hearts, Ranks.Six);
+            Card card7 = new Card(Suits.Hearts, Ranks.Seven);
+            Card card8 = new Card(Suits.Hearts, Ranks.Eight);
+            Card card9 = new Card(Suits.Hearts, Ranks.Nine);
+            Card card10 = new Card(Suits.Hearts, Ranks.Ten);
+            Card card11 = new Card(Suits.Hearts, Ranks.Jack);
+            Card card12 = new Card(Suits.Hearts, Ranks.Queen);
+            Card card13 = new Card(Suits.Hearts, Ranks.King);
 
             // when
             var board = _fixture.GetService<GameBoard>();
             board.Clear();
 
-            var result = board.IsFull(Suits.Clubs);
+            board.SetStartingCard(startingCard);
+            board.PushCard(card13);
+            board.PushCard(card12);
+            board.PushCard(card11);
+            board.PushCard(card10);
+            board.PushCard(card9);
+            board.PushCard(card8);
+            board.PushCard(card7);
+            board.PushCard(card6);
+
+            var result = board.IsFull(Suits.Hearts);
 
             // then
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact(DisplayName = "Clear Board")]
