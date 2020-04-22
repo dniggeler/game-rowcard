@@ -1,4 +1,6 @@
-﻿using RowCardGameEngine.Game.Models;
+﻿using System;
+using System.Collections.Generic;
+using RowCardGameEngine.Game.Models;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,11 +11,13 @@ namespace RowCardGameEngine.Tests
     {
         private readonly ITestOutputHelper outputHelper;
         private readonly GameEngineFixture _fixture;
+        private readonly Random _rnd;
 
         public GameBoardTests(ITestOutputHelper outputHelper, GameEngineFixture fixture)
         {
             this.outputHelper = outputHelper;
             _fixture = fixture;
+            _rnd = new Random(1);
         }
 
         [Fact(DisplayName = "Create Empty Board")]
@@ -142,6 +146,32 @@ namespace RowCardGameEngine.Tests
 
             // then
             Assert.True(result);
+        }
+
+        [Fact(DisplayName = "Setup Board")]
+        public void ShouldSetNumberOfPlayers()
+        {
+            // given
+            var players = new List<Player>
+            {
+                Create(false),
+                Create(true)
+            };
+
+            // when
+            var board = _fixture.GetService<GameBoard>();
+            board.Clear();
+
+            var result = board.Setup(players).IsRight;
+
+            // then
+            Assert.True(result);
+        }
+
+        private Player Create(bool isMachinePlayer)
+        {
+            long id = _rnd.Next(1, 1000);
+            return new Player(id, isMachinePlayer,$"{id}_test", DateTime.Now);
         }
     }
 }

@@ -9,22 +9,59 @@ namespace RowCardGameEngine.Game.Models
 {
     public class GameBoard
     {
+        private readonly Deck deck;
+        private Card startingCard;
+        
         private readonly ILogger<GameBoard> logger;
-
         private readonly Dictionary<Suits,Stack<Card>> highStacks = new Dictionary<Suits, Stack<Card>>();
         private readonly Dictionary<Suits,Stack<Card>> lowStacks = new Dictionary<Suits, Stack<Card>>();
         private readonly Dictionary<Suits, Card> startCards = new Dictionary<Suits, Card>();
-        private Card startingCard;
+        private readonly Dictionary<Player, Hand> hands = new Dictionary<Player, Hand>();
 
-        public GameBoard(ILogger<GameBoard> logger)
+        public GameBoard(ILogger<GameBoard> logger, Deck deck)
         {
             this.logger = logger;
+            this.deck = deck;
 
             foreach (var s in GetSuitsValues())
             {
                 lowStacks.Add(s, new Stack<Card>());
                 highStacks.Add(s, new Stack<Card>());
             }
+        }
+        
+        public int NumberOfRealPlayers { get; private set; }
+        public int NumberOfMachinePlayers { get; private set; }
+
+        public int NumberOfPlayers => NumberOfMachinePlayers + NumberOfRealPlayers;
+
+        public Either<string, Unit> Setup(IReadOnlyCollection<Player> players)
+        {
+            int numberOfMachinePlayers = players.Count(p => p.IsMachinePlayer);
+            int numberOfRealPlayers = players.Count - numberOfMachinePlayers;
+
+            var result = SetNumberOfPlayers(numberOfRealPlayers, numberOfMachinePlayers);
+            if (result.IsLeft)
+            {
+                return result;
+            };
+
+            // create hands
+            int numberOfCards = deck.Count / NumberOfPlayers;
+            foreach (Player player in players)
+            {
+                var hand = new Hand(numberOfCards);
+
+                for (int ii = 0; ii < numberOfCards; ii++)
+                {
+                    deck.DequeueCard()
+                        .IfSome(c => hand.Add(c));
+                }
+
+                hands[player] = hand;
+            }
+
+            return Unit.Default;
         }
 
         public Either<string, Unit> SetStartingCard(Card card)
@@ -49,6 +86,9 @@ namespace RowCardGameEngine.Game.Models
 
         public void Clear()
         {
+            NumberOfRealPlayers = 0;
+            NumberOfMachinePlayers = 0;
+
             startingCard = null;
             startCards.Clear();
 
@@ -193,6 +233,31 @@ namespace RowCardGameEngine.Game.Models
 
                 return highStacks[card.Suit];
             }
+        }
+        
+        private Either<string, Unit> SetNumberOfPlayers(int numberOfRealPlayers, int numberOfMachinePlayers)
+        {
+            int totalNumberOfPlayers = numberOfMachinePlayers + numberOfRealPlayers;
+
+            if (totalNumberOfPlayers > GameConfiguration.MaxPlayers)
+            {
+                return $"Game allows {GameConfiguration.MaxPlayers} players only";
+            }
+
+            if (totalNumberOfPlayers < GameConfiguration.MinPlayers)
+            {
+                return $"Game needs at least {GameConfiguration.MinPlayers} players";
+            }
+
+            if (numberOfMachinePlayers > GameConfiguration.MaxMachinePlayers)
+            {
+                return $"Game allows {GameConfiguration.MaxMachinePlayers} machine players only";
+            }
+
+            NumberOfRealPlayers = numberOfRealPlayers;
+            NumberOfMachinePlayers = numberOfMachinePlayers;
+
+            return Unit.Default;
         }
 
         private static IEnumerable<Suits> GetSuitsValues()

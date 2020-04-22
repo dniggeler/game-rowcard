@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using AzulGameEngine.Game.Models;
+﻿using System.Collections.Generic;
 using LanguageExt;
 using RowCardGameEngine.Game.Models;
 
-
-namespace AzulGameEngine.Game
+namespace RowCardGameEngine.Game
 {
     public interface IGameState
     {
         int NumberOfPlayers { get; }
 
-        ICollection<PlayerModel> GetPlayers();
+        ICollection<Player> GetPlayers();
 
         Either<string, long> AddPlayer(string playerName);
 

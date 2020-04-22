@@ -1,4 +1,4 @@
-﻿namespace AzulGameEngine.Game.Models
+﻿namespace RowCardGameEngine.Game.Models
 {
     public class FinalGameResult
     {

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using AzulGameEngine.Game.Models;
 using LanguageExt;
 using RowCardGameEngine.Game.Models;
 
-
-namespace AzulGameEngine.Game
+namespace RowCardGameEngine.Game
 {
     public class GameEngine
     {
@@ -23,7 +20,7 @@ namespace AzulGameEngine.Game
 
         public int NumberOfPlayers => gameState.NumberOfPlayers;
 
-        public ICollection<PlayerModel> GetPlayers()
+        public ICollection<Player> GetPlayers()
         {
             return gameState.GetPlayers();
         }

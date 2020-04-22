@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using AzulGameEngine.Game.Models;
 using LanguageExt;
 using RowCardGameEngine.Game.Models;
 
-
-namespace AzulGameEngine.Game
+namespace RowCardGameEngine.Game
 {
     internal class GameStateBase
     {
         private readonly Random rnd;
 
-        private readonly ConcurrentDictionary<string, PlayerModel> players =
-            new ConcurrentDictionary<string, PlayerModel>();
+        private readonly ConcurrentDictionary<string, Player> players =
+            new ConcurrentDictionary<string, Player>();
 
         public GameStateBase(Random rnd)
         {
@@ -22,7 +20,7 @@ namespace AzulGameEngine.Game
 
         public int NumberOfPlayers => players.Count;
 
-        public ICollection<PlayerModel> GetPlayers()
+        public ICollection<Player> GetPlayers()
         {
             return players.Values;
         }
@@ -41,12 +39,7 @@ namespace AzulGameEngine.Game
 
             var newPlayer = players.AddOrUpdate(
                 playerName,
-                name => new PlayerModel
-                {
-                    Id = rnd.Next(),
-                    Name = name,
-                    JoinedAt = DateTime.Now
-                },
+                name => new Player(rnd.Next(),false, name, DateTime.Now),
                 (_, p) => p);
 
             return newPlayer.Id;

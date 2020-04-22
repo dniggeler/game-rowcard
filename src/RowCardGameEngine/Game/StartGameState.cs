@@ -1,8 +1,8 @@
 ﻿using System;
-using AzulGameEngine.Game.Models;
 using LanguageExt;
+using RowCardGameEngine.Game.Models;
 
-namespace AzulGameEngine.Game
+namespace RowCardGameEngine.Game
 {
     internal class StartGameState : GameStateBase, IGameState
     {

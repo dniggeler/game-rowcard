@@ -1,8 +1,8 @@
 ﻿using System;
 using AzulGameEngine.ChatHub;
-using AzulGameEngine.Game;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RowCardGameEngine.Game;
 using RowCardGameEngine.Game.Models;
 
 namespace RowCardGameEngine
