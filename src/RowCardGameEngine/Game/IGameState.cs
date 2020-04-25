@@ -12,9 +12,9 @@ namespace RowCardGameEngine.Game
 
         Either<string, long> AddPlayer(string playerName);
 
-        Either<string, (long GameId, long GameStateId)> Create();
-
         Either<string, long> Start();
+
+        Either<string, long> Setup();
 
         Either<string, FinalGameResult> Finish();
     }

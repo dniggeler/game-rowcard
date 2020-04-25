@@ -27,10 +27,10 @@ namespace AzulGameEngine.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult CreateGame()
         {
-            return gameEngine.Create()
+            return gameEngine.Setup()
                 .Match<ActionResult>(
                 Right: t => Created(HttpContext.Request.Path.Value, t.GameId),
-                Left: err => BadRequest(err));
+                Left: BadRequest);
         }
 
         [HttpGet("players")]

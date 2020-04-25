@@ -44,5 +44,10 @@ namespace RowCardGameEngine.Game
 
             return newPlayer.Id;
         }
+
+        protected Either<string, long> AddPlayerNotPossible(string playerName)
+        {
+            return "Game already started, adding player is no more possible";
+        }
     }
 }

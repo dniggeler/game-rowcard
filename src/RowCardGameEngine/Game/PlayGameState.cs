@@ -12,15 +12,15 @@ namespace RowCardGameEngine.Game
 
         public new Either<string, long> AddPlayer(string playerName)
         {
-            return "Game already started, adding player is no more possible";
-        }
-
-        public Either<string, (long GameId, long GameStateId)> Create()
-        {
-            return "Game has already started";
+            return AddPlayerNotPossible(playerName);
         }
 
         public Either<string, long> Start()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Either<string, long> Setup()
         {
             throw new NotImplementedException();
         }

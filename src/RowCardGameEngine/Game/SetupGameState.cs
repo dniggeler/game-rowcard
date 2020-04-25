@@ -4,9 +4,9 @@ using RowCardGameEngine.Game.Models;
 
 namespace RowCardGameEngine.Game
 {
-    internal class StartGameState : GameStateBase, IGameState
+    internal class SetupGameState : GameStateBase, IGameState
     {
-        public StartGameState(Random rnd) : base(rnd)
+        public SetupGameState(Random rnd) : base(rnd)
         {
         }
 

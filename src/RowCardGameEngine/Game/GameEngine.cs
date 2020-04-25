@@ -30,14 +30,19 @@ namespace RowCardGameEngine.Game
             return gameState.AddPlayer(playerName);
         }
 
-        public Either<string, (long GameId, long GameStateId)> Create()
+        public Either<string, (long GameId, long GameStateId)> Setup()
         {
-            return gameState.Create();
+            gameState = new SetupGameState(rnd);
+
+            long stateId = 0;
+            long gameId = rnd.Next();
+
+            return (gameId, stateId);
         }
 
         public Either<string,(long GameId, long GameStateId)> Start()
         {
-            gameState = new PlayGameState(this.rnd);
+            gameState = new PlayGameState(rnd);
 
             long stateId = 0;
             long gameId = rnd.Next();

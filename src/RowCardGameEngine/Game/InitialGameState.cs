@@ -11,14 +11,14 @@ namespace RowCardGameEngine.Game
         {
         }
 
-        public Either<string, (long GameId, long GameStateId)> Create()
-        {
-            return "Cannot start yet";
-        }
-
         public Either<string, long> Start()
         {
             return "Change not allowed";
+        }
+
+        public Either<string, long> Setup()
+        {
+            throw new NotImplementedException();
         }
 
         public Either<string, FinalGameResult> Finish()
