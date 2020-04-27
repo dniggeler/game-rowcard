@@ -11,12 +11,17 @@ namespace RowCardGameEngine.Game
         {
         }
 
+        public Either<string, (long GameId, long GameStateId)> GetId()
+        {
+            throw new NotImplementedException();
+        }
+
         public Either<string, long> Start()
         {
             return "Change not allowed";
         }
 
-        public Either<string, long> Setup()
+        public IGameState Setup(GameBoard gameBoard)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using LanguageExt;
 using RowCardGameEngine.Game.Models;
 
@@ -8,12 +9,14 @@ namespace RowCardGameEngine.Game
     public class GameEngine
     {
         private readonly Random rnd;
+        private readonly Func<GameBoard> createBoardFunc;
 
         private IGameState gameState;
 
-        public GameEngine(Random rnd)
+        public GameEngine(Random rnd, Func<GameBoard> createBoardFunc)
         {
             this.rnd = rnd;
+            this.createBoardFunc = createBoardFunc;
 
             gameState = new InitialGameState(rnd);
         }
@@ -32,17 +35,22 @@ namespace RowCardGameEngine.Game
 
         public Either<string, (long GameId, long GameStateId)> Setup()
         {
-            gameState = new SetupGameState(rnd);
+            var gameBoard = createBoardFunc();
 
-            long stateId = 0;
-            long gameId = rnd.Next();
+            var r = gameBoard
+                    .Setup(GetPlayers().ToList().AsReadOnly())
+                    .Map(_ =>
+                    {
+                        gameState = gameState.Setup(gameBoard);
 
-            return (gameId, stateId);
+
+                    });
         }
 
         public Either<string,(long GameId, long GameStateId)> Start()
         {
-            gameState = new PlayGameState(rnd);
+            gameState.GetGameBoard()
+                .IfRight(board => { gameState = new PlayGameState(rnd, board); });
 
             long stateId = 0;
             long gameId = rnd.Next();

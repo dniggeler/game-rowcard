@@ -9,6 +9,7 @@ namespace RowCardGameEngine.Game
     internal class GameStateBase
     {
         private readonly Random rnd;
+        private readonly GameBoard gameBoard;
 
         private readonly ConcurrentDictionary<string, Player> players =
             new ConcurrentDictionary<string, Player>();
@@ -18,11 +19,27 @@ namespace RowCardGameEngine.Game
             this.rnd = rnd;
         }
 
+        public GameStateBase(Random rnd, GameBoard gameBoard)
+        {
+            this.rnd = rnd;
+            this.gameBoard = gameBoard;
+        }
+
         public int NumberOfPlayers => players.Count;
 
         public ICollection<Player> GetPlayers()
         {
             return players.Values;
+        }
+
+        public Either<string, GameBoard> GetGameBoard()
+        {
+            if (gameBoard == null)
+            {
+                return "Game is not initialized";
+            }
+
+            return gameBoard;
         }
 
         public Either<string, long> AddPlayer(string playerName)

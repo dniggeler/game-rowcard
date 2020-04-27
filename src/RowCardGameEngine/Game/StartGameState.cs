@@ -6,7 +6,7 @@ namespace RowCardGameEngine.Game
 {
     internal class StartGameState : GameStateBase, IGameState
     {
-        public StartGameState(Random rnd) : base(rnd)
+        public StartGameState(Random rnd, GameBoard gameBoard) : base(rnd, gameBoard)
         {
         }
 
@@ -30,7 +30,7 @@ namespace RowCardGameEngine.Game
             return 1;
         }
 
-        public Either<string, long> Setup()
+        public IGameState Setup(GameBoard gameBoard)
         {
             throw new NotImplementedException();
         }
