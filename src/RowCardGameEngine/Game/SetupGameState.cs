@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using LanguageExt;
 using RowCardGameEngine.Game.Models;
 
@@ -6,7 +7,8 @@ namespace RowCardGameEngine.Game
 {
     internal class SetupGameState : GameStateBase, IGameState
     {
-        public SetupGameState(Random rnd, GameBoard gameBoard) : base(rnd, gameBoard)
+        public SetupGameState(Random rnd, GameBoard gameBoard, ConcurrentDictionary<long, Player> players)
+            : base(rnd, gameBoard, players)
         {
         }
 
@@ -15,7 +17,7 @@ namespace RowCardGameEngine.Game
             return AddPlayerNotPossible(playerName);
         }
 
-        public Either<string, IGameState> Start(long playerId)
+        public Either<string, IGameState> Start()
         {
             if (NumberOfPlayers < GameConfiguration.MinPlayers)
             {
@@ -27,7 +29,7 @@ namespace RowCardGameEngine.Game
                 return $"Max players {GameConfiguration.MaxPlayers} exceeded";
             }
 
-            return new PlayGameState(Rnd, GameBoard);
+            return new StartGameState(Rnd, GameBoard, Players);
         }
 
         public Either<string, IGameState> PlayCard(long playerId, Card card)

@@ -11,7 +11,7 @@ namespace RowCardGameEngine.Game
         {
         }
 
-        public Either<string, IGameState> Start(long playerId)
+        public Either<string, IGameState> Start()
         {
             return "Game has not yet setup";
         }
@@ -33,7 +33,7 @@ namespace RowCardGameEngine.Game
                 return $"Max players {GameConfiguration.MaxPlayers} exceeded";
             }
 
-            return new SetupGameState(Rnd, gameBoard);
+            return new SetupGameState(Rnd, gameBoard, Players);
         }
 
         public Either<string, IGameState> Finish()

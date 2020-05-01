@@ -11,7 +11,7 @@ namespace RowCardGameEngine.Game
         protected readonly Random Rnd;
         protected readonly GameBoard GameBoard;
 
-        private readonly ConcurrentDictionary<long, Player> players =
+        protected readonly ConcurrentDictionary<long, Player> Players =
             new ConcurrentDictionary<long, Player>();
 
         public GameStateBase(Random rnd)
@@ -19,17 +19,18 @@ namespace RowCardGameEngine.Game
             this.Rnd = rnd;
         }
 
-        public GameStateBase(Random rnd, GameBoard gameBoard)
+        public GameStateBase(Random rnd, GameBoard gameBoard, ConcurrentDictionary<long, Player> players)
         {
             this.Rnd = rnd;
             this.GameBoard = gameBoard;
+            this.Players = players;
         }
 
-        public int NumberOfPlayers => players.Count;
+        public int NumberOfPlayers => Players.Count;
 
         public ICollection<Player> GetPlayers()
         {
-            return players.Values;
+            return Players.Values;
         }
 
         public Either<string, GameBoard> GetGameBoard()
@@ -49,14 +50,14 @@ namespace RowCardGameEngine.Game
                 return "Player already exist";
             }
 
-            if (players.Count == GameConfiguration.MaxPlayers)
+            if (Players.Count == GameConfiguration.MaxPlayers)
             {
                 return "Game is full with players";
             }
 
             long newPlayerId = Rnd.Next();
 
-            var newPlayer = players.AddOrUpdate(
+            var newPlayer = Players.AddOrUpdate(
                 newPlayerId,
                 id => new Player(id, false, playerName, DateTime.Now),
                 (_, p) => p);
@@ -71,7 +72,7 @@ namespace RowCardGameEngine.Game
 
         protected bool Contains(string name)
         {
-            foreach (KeyValuePair<long, Player> keyValuePair in players)
+            foreach (KeyValuePair<long, Player> keyValuePair in Players)
             {
                 if (keyValuePair.Value.Name == name)
                 {

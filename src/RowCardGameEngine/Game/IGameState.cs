@@ -14,7 +14,7 @@ namespace RowCardGameEngine.Game
 
         Either<string, long> AddPlayer(string playerName);
 
-        Either<string, IGameState> Start(long playerId);
+        Either<string, IGameState> Start();
 
         Either<string, IGameState> PlayCard(long playerId, Card card);
 

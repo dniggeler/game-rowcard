@@ -54,7 +54,7 @@ namespace RowCardGameEngine.Game
             startingPlayerId = playerId;
 
             return gameState
-                .Start(playerId)
+                .Start()
                 .Iter(newState => gameState = newState);
         }
 

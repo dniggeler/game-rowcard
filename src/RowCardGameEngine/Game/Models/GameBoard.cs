@@ -63,6 +63,16 @@ namespace RowCardGameEngine.Game.Models
             return this;
         }
 
+        public Either<string, bool> RemoveCardFromHand(long playerId, Card card)
+        {
+            if (hands.TryGetValue(playerId, out Hand hand))
+            {
+                return hand.Remove(card);
+            }
+
+            return $"Player {playerId} unknown";
+        }
+
         public Either<string, Unit> SetStartingCard(Card card)
         {
             if (card == null)
@@ -74,7 +84,7 @@ namespace RowCardGameEngine.Game.Models
             {
                 return "Game board ist not empty";
             }
-
+            
             startCards[card.Suit] = card;
             startingCard = card;
 
