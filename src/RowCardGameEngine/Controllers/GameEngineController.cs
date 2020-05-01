@@ -29,7 +29,7 @@ namespace AzulGameEngine.Controllers
         {
             return gameEngine.Setup()
                 .Match<ActionResult>(
-                Right: t => Created(HttpContext.Request.Path.Value, t.GameId),
+                Right: id => Created(HttpContext.Request.Path.Value, id),
                 Left: BadRequest);
         }
 

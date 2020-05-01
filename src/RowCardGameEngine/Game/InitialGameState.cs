@@ -11,22 +11,37 @@ namespace RowCardGameEngine.Game
         {
         }
 
-        public Either<string, (long GameId, long GameStateId)> GetId()
+        public Either<string, long> GetId()
         {
             throw new NotImplementedException();
         }
 
-        public Either<string, long> Start()
+        public Either<string, IGameState> Start(long playerId)
         {
-            return "Change not allowed";
+            return "Game has not yet setup";
         }
 
-        public IGameState Setup(GameBoard gameBoard)
+        public Either<string, IGameState> PlayCard(long playerId, Card card)
         {
-            throw new NotImplementedException();
+            return "Game is not yet ready to play card";
         }
 
-        public Either<string, FinalGameResult> Finish()
+        public Either<string, IGameState> Setup(GameBoard gameBoard)
+        {
+            if (NumberOfPlayers < GameConfiguration.MinPlayers)
+            {
+                return "Not enough players";
+            }
+
+            if (NumberOfPlayers > GameConfiguration.MaxPlayers)
+            {
+                return $"Max players {GameConfiguration.MaxPlayers} exceeded";
+            }
+
+            return new SetupGameState(Rnd, gameBoard);
+        }
+
+        public Either<string, IGameState> Finish()
         {
             return "Change not allowed";
         }

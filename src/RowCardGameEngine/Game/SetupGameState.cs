@@ -15,7 +15,7 @@ namespace RowCardGameEngine.Game
             return AddPlayerNotPossible(playerName);
         }
 
-        public Either<string, long> Start()
+        public Either<string, IGameState> Start(long playerId)
         {
             if (NumberOfPlayers < GameConfiguration.MinPlayers)
             {
@@ -27,15 +27,20 @@ namespace RowCardGameEngine.Game
                 return $"Max players {GameConfiguration.MaxPlayers} exceeded";
             }
 
-            return 1;
+            return new PlayGameState(Rnd, GameBoard);
         }
 
-        public IGameState Setup(GameBoard gameBoard)
+        public Either<string, IGameState> PlayCard(long playerId, Card card)
         {
-            throw new NotImplementedException();
+            return "Game is not yet ready to play card";
         }
 
-        public Either<string, FinalGameResult> Finish()
+        public Either<string, IGameState> Setup(GameBoard gameBoard)
+        {
+            return "Game is already setup";
+        }
+
+        public Either<string, IGameState> Finish()
         {
             return "Game is not finished";
         }

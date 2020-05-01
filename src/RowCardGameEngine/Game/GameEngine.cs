@@ -8,17 +8,19 @@ namespace RowCardGameEngine.Game
 {
     public class GameEngine
     {
-        private readonly Random rnd;
-        private readonly Func<GameBoard> createBoardFunc;
+        private readonly int GameId;
+        private readonly Func<GameBoard> createNewGameBoardFunc;
+        private long startingPlayerId;
 
         private IGameState gameState;
 
         public GameEngine(Random rnd, Func<GameBoard> createBoardFunc)
         {
-            this.rnd = rnd;
-            this.createBoardFunc = createBoardFunc;
+            createNewGameBoardFunc = createBoardFunc;
 
             gameState = new InitialGameState(rnd);
+
+            GameId = rnd.Next();
         }
 
         public int NumberOfPlayers => gameState.NumberOfPlayers;
@@ -33,29 +35,46 @@ namespace RowCardGameEngine.Game
             return gameState.AddPlayer(playerName);
         }
 
-        public Either<string, (long GameId, long GameStateId)> Setup()
+        public Either<string, int> Setup()
         {
-            var gameBoard = createBoardFunc();
+            var gameBoard = createNewGameBoardFunc();
 
-            var r = gameBoard
-                    .Setup(GetPlayers().ToList().AsReadOnly())
-                    .Map(_ =>
-                    {
-                        gameState = gameState.Setup(gameBoard);
+            Either<string, IGameState> r =
+                from board in gameBoard.Setup(GetPlayers().ToList().AsReadOnly())
+                from newState in gameState.Setup(board)
+                select newState;
 
+            r.Iter(newState => gameState = newState);
 
-                    });
+            return r.Map(_ => GameId);
         }
 
-        public Either<string,(long GameId, long GameStateId)> Start()
+        public Either<string, Unit> SetStartingPlayer(long playerId)
         {
-            gameState.GetGameBoard()
-                .IfRight(board => { gameState = new PlayGameState(rnd, board); });
+            startingPlayerId = playerId;
 
-            long stateId = 0;
-            long gameId = rnd.Next();
+            return gameState
+                .Start(playerId)
+                .Iter(newState => gameState = newState);
+        }
 
-            return (gameId, stateId);
+        public Either<string, Unit> SetStartingCard(long playerId, Card card)
+        {
+            if (playerId != startingPlayerId)
+            {
+                return "Player not allowed to play first card";
+            }
+
+            return gameState
+                .PlayCard(playerId, card)
+                .Iter(newState => gameState = newState);
+        }
+
+        public Either<string, Unit> PlayCard(long playerId, Card card)
+        {
+            return gameState
+                .PlayCard(playerId, card)
+                .Iter(newState => gameState = newState);
         }
     }
 }

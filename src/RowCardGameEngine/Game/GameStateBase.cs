@@ -8,21 +8,21 @@ namespace RowCardGameEngine.Game
 {
     internal class GameStateBase
     {
-        private readonly Random rnd;
-        private readonly GameBoard gameBoard;
+        protected readonly Random Rnd;
+        protected readonly GameBoard GameBoard;
 
-        private readonly ConcurrentDictionary<string, Player> players =
-            new ConcurrentDictionary<string, Player>();
+        private readonly ConcurrentDictionary<long, Player> players =
+            new ConcurrentDictionary<long, Player>();
 
         public GameStateBase(Random rnd)
         {
-            this.rnd = rnd;
+            this.Rnd = rnd;
         }
 
         public GameStateBase(Random rnd, GameBoard gameBoard)
         {
-            this.rnd = rnd;
-            this.gameBoard = gameBoard;
+            this.Rnd = rnd;
+            this.GameBoard = gameBoard;
         }
 
         public int NumberOfPlayers => players.Count;
@@ -34,17 +34,17 @@ namespace RowCardGameEngine.Game
 
         public Either<string, GameBoard> GetGameBoard()
         {
-            if (gameBoard == null)
+            if (GameBoard == null)
             {
                 return "Game is not initialized";
             }
 
-            return gameBoard;
+            return GameBoard;
         }
 
         public Either<string, long> AddPlayer(string playerName)
         {
-            if (players.ContainsKey(playerName))
+            if (Contains(playerName))
             {
                 return "Player already exist";
             }
@@ -54,9 +54,11 @@ namespace RowCardGameEngine.Game
                 return "Game is full with players";
             }
 
+            long newPlayerId = Rnd.Next();
+
             var newPlayer = players.AddOrUpdate(
-                playerName,
-                name => new Player(rnd.Next(),false, name, DateTime.Now),
+                newPlayerId,
+                id => new Player(id, false, playerName, DateTime.Now),
                 (_, p) => p);
 
             return newPlayer.Id;
@@ -65,6 +67,19 @@ namespace RowCardGameEngine.Game
         protected Either<string, long> AddPlayerNotPossible(string playerName)
         {
             return "Game already started, adding player is no more possible";
+        }
+
+        protected bool Contains(string name)
+        {
+            foreach (KeyValuePair<long, Player> keyValuePair in players)
+            {
+                if (keyValuePair.Value.Name == name)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

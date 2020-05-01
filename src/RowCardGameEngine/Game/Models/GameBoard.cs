@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using LanguageExt;
-using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace RowCardGameEngine.Game.Models
@@ -35,7 +34,7 @@ namespace RowCardGameEngine.Game.Models
 
         public int NumberOfPlayers => NumberOfMachinePlayers + NumberOfRealPlayers;
 
-        public Either<string, Unit> Setup(IReadOnlyCollection<Player> players)
+        public Either<string, GameBoard> Setup(IReadOnlyCollection<Player> players)
         {
             int numberOfMachinePlayers = players.Count(p => p.IsMachinePlayer);
             int numberOfRealPlayers = players.Count - numberOfMachinePlayers;
@@ -43,8 +42,8 @@ namespace RowCardGameEngine.Game.Models
             var result = SetNumberOfPlayers(numberOfRealPlayers, numberOfMachinePlayers);
             if (result.IsLeft)
             {
-                return result;
-            };
+                return this;
+            }
 
             // create hands
             int numberOfCards = deck.Count / NumberOfPlayers;
@@ -61,7 +60,7 @@ namespace RowCardGameEngine.Game.Models
                 hands[player] = hand;
             }
 
-            return Unit.Default;
+            return this;
         }
 
         public Either<string, Unit> SetStartingCard(Card card)

@@ -4,7 +4,7 @@ using Xunit.Abstractions;
 
 namespace RowCardGameEngine.Tests
 {
-    [Trait("Game Engine", "Card")]
+    [Trait("Game", "Card")]
     public class CardTests
     {
         private readonly ITestOutputHelper outputHelper;

@@ -10,24 +10,36 @@ namespace RowCardGameEngine.Game
         {
         }
 
+        public Either<string, long> GetId()
+        {
+            throw new NotImplementedException();
+        }
+
         public new Either<string, long> AddPlayer(string playerName)
         {
             return AddPlayerNotPossible(playerName);
         }
 
-        public Either<string, long> Start()
+        Either<string, IGameState> IGameState.Start(long playerId)
         {
-            throw new NotImplementedException();
+            return "Game has already started";
         }
 
-        public IGameState Setup(GameBoard gameBoard)
+        public Either<string, IGameState> PlayCard(long playerId, Card card)
         {
-            throw new NotImplementedException();
+            return GameBoard
+                .PushCard(card)
+                .Map<IGameState>(_ => this);
         }
 
-        public Either<string, FinalGameResult> Finish()
+        public Either<string, IGameState> Setup(GameBoard gameBoard)
         {
-            return "Game is not finished";
+            return "Game has already setup";
+        }
+
+        public Either<string, IGameState> Finish()
+        {
+            return "Game is not yet finished";
         }
     }
 }

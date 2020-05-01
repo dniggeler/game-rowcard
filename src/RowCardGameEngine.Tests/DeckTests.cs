@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace RowCardGameEngine.Tests
 {
-    [Trait("Game Engine", "Deck")]
+    [Trait("Game", "Deck")]
     public class DeckTests : IClassFixture<GameEngineFixture>
     {
         private readonly ITestOutputHelper outputHelper;

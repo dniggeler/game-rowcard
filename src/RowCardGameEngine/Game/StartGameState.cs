@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using LanguageExt;
 using RowCardGameEngine.Game.Models;
 
@@ -10,34 +11,36 @@ namespace RowCardGameEngine.Game
         {
         }
 
+        public Either<string, (long GameId, long GameStateId)> GetId()
+        {
+            throw new NotImplementedException();
+        }
+
         public new Either<string, long> AddPlayer(string playerName)
         {
             return AddPlayerNotPossible(playerName);
         }
 
-        public Either<string, long> Start()
+        Either<string, IGameState> IGameState.Start(long playerId)
         {
-            if (NumberOfPlayers < GameConfiguration.MinPlayers)
-            {
-                return "Not enough players";
-            }
-
-            if (NumberOfPlayers > GameConfiguration.MaxPlayers)
-            {
-                return $"Max players {GameConfiguration.MaxPlayers} exceeded";
-            }
-
-            return 1;
+            return "Game has already started";
         }
 
-        public IGameState Setup(GameBoard gameBoard)
+        public Either<string, IGameState> PlayCard(long playerId, Card card)
         {
-            throw new NotImplementedException();
+            return GameBoard
+                .SetStartingCard(card)
+                .Map<IGameState>(_ => new PlayGameState(Rnd, GameBoard));
         }
 
-        public Either<string, FinalGameResult> Finish()
+        public Either<string, IGameState> Setup(GameBoard gameBoard)
         {
-            return "Game is not finished";
+            return "Game has already setup";
+        }
+
+        public Either<string, IGameState> Finish()
+        {
+            return "Game is not yet finished";
         }
     }
 }
