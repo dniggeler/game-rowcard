@@ -48,6 +48,7 @@ namespace RowCardGameEngine.Tests
                 .Map(_ => engine.SetStartingCard(startingPlayerId, startingCard));
 
             result.IfLeft(error => outputHelper.WriteLine(error));
+            result.IfRight(_ => engine.GetActionHistory().Iter(a => outputHelper.WriteLine(a)));
 
             // then
             Assert.True(result.IsRight);

@@ -14,6 +14,8 @@ namespace RowCardGameEngine.Game
 
         private IGameState gameState;
 
+        private readonly List<string> actionHistory = new List<string>();
+
         public GameEngine(Random rnd, Func<GameBoard> createBoardFunc)
         {
             createNewGameBoardFunc = createBoardFunc;
@@ -32,7 +34,12 @@ namespace RowCardGameEngine.Game
 
         public Either<string, long> AddPlayer(string playerName)
         {
-            return gameState.AddPlayer(playerName);
+            return gameState.AddPlayer(playerName)
+                .Map(id =>
+                {
+                    actionHistory.Add($"player {playerName}, {id} added");
+                    return id;
+                });
         }
 
         public Either<string, int> Setup()
@@ -46,6 +53,8 @@ namespace RowCardGameEngine.Game
 
             r.Iter(newState => gameState = newState);
 
+            actionHistory.Add($"Game {GameId} setup");
+
             return r.Map(_ => GameId);
         }
 
@@ -55,7 +64,11 @@ namespace RowCardGameEngine.Game
 
             return gameState
                 .Start()
-                .Iter(newState => gameState = newState);
+                .Iter(newState =>
+                {
+                    actionHistory.Add($"Player {playerId} set as starter");
+                    gameState = newState;
+                });
         }
 
         public Either<string, Unit> SetStartingCard(long playerId, Card card)
@@ -67,14 +80,28 @@ namespace RowCardGameEngine.Game
 
             return gameState
                 .PlayCard(playerId, card)
-                .Iter(newState => gameState = newState);
+                .Iter(newState =>
+                {
+                    actionHistory.Add($"Player {playerId} set {card} as starting card");
+
+                    gameState = newState;
+                });
         }
 
         public Either<string, Unit> PlayCard(long playerId, Card card)
         {
             return gameState
                 .PlayCard(playerId, card)
-                .Iter(newState => gameState = newState);
+                .Iter(newState =>
+                {
+                    actionHistory.Add($"Player {playerId} played card {card}");
+                    gameState = newState;
+                });
+        }
+
+        public IReadOnlyCollection<string> GetActionHistory()
+        {
+            return actionHistory;
         }
     }
 }
