@@ -15,7 +15,7 @@ namespace RowCardGameEngine.Game.Models
         private readonly Dictionary<Suits,Stack<Card>> highStacks = new Dictionary<Suits, Stack<Card>>();
         private readonly Dictionary<Suits,Stack<Card>> lowStacks = new Dictionary<Suits, Stack<Card>>();
         private readonly Dictionary<Suits, Card> startCards = new Dictionary<Suits, Card>();
-        private readonly Dictionary<Player, Hand> hands = new Dictionary<Player, Hand>();
+        private readonly Dictionary<long, Hand> hands = new Dictionary<long, Hand>();
 
         public GameBoard(ILogger<GameBoard> logger, Deck deck)
         {
@@ -57,7 +57,7 @@ namespace RowCardGameEngine.Game.Models
                         .IfSome(c => hand.Add(c));
                 }
 
-                hands[player] = hand;
+                hands[player.Id] = hand;
             }
 
             return this;

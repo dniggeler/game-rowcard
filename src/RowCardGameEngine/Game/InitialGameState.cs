@@ -11,11 +11,6 @@ namespace RowCardGameEngine.Game
         {
         }
 
-        public Either<string, long> GetId()
-        {
-            throw new NotImplementedException();
-        }
-
         public Either<string, IGameState> Start(long playerId)
         {
             return "Game has not yet setup";

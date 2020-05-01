@@ -11,11 +11,6 @@ namespace RowCardGameEngine.Game
         {
         }
 
-        public Either<string, (long GameId, long GameStateId)> GetId()
-        {
-            throw new NotImplementedException();
-        }
-
         public new Either<string, long> AddPlayer(string playerName)
         {
             return AddPlayerNotPossible(playerName);
