@@ -10,11 +10,17 @@ namespace RowCardGameEngine.Tests
     {
         private readonly ITestOutputHelper outputHelper;
         private readonly GameEngineFixture _fixture;
+        private readonly string _playerNameA;
+        private readonly string _playerNameB;
 
         public GameEngineTests(ITestOutputHelper outputHelper, GameEngineFixture fixture)
         {
             this.outputHelper = outputHelper;
             _fixture = fixture;
+
+            _playerNameA = "a";
+            _playerNameB = "b";
+
         }
 
         [Fact(DisplayName = "Fail Engine Setup")]
@@ -34,24 +40,54 @@ namespace RowCardGameEngine.Tests
         public void ShouldSuccessfullySetupGameEngineReadyToPlay()
         {
             // given
-            var playerA = "a";
-            var playerB = "b";
             var startingCard = new Card(Suits.Clubs, Ranks.Ace);
 
             // when
-            var engine = _fixture.GetService<GameEngine>();
-            long startingPlayerId = engine.AddPlayer(playerA).IfLeft(0);
-            engine.AddPlayer(playerB);
+            (GameEngine Engine, long StartingPlayer, long NotStartingPlayer) t
+                = SetupTwoPlayerEngine();
 
-            var result = engine.Setup()
-                .Bind(id => engine.SetStartingPlayer(startingPlayerId))
-                .Map(_ => engine.SetStartingCard(startingPlayerId, startingCard));
+            var result = from id in t.Engine.Setup()
+                from p in t.Engine.SetStartingPlayer(t.StartingPlayer)
+                from c in t.Engine.SetStartingCard(t.StartingPlayer, startingCard)
+                select id;
 
             result.IfLeft(error => outputHelper.WriteLine(error));
-            result.IfRight(_ => engine.GetActionHistory().Iter(a => outputHelper.WriteLine(a)));
+            result.IfRight(_ => t.Engine.GetActionHistory().Iter(a => outputHelper.WriteLine(a)));
 
             // then
             Assert.True(result.IsRight);
         }
+
+        [Fact(DisplayName = "Engine Not Ready to Play")]
+        public void ShouldSuccessfullySetupGameEngineNotReadyToPlay()
+        {
+            // given
+            var startingCard = new Card(Suits.Clubs, Ranks.Ace);
+
+            // when
+            (GameEngine Engine, long StartingPlayer, long NotStartingPlayer) t
+                = SetupTwoPlayerEngine();
+
+            var result = from id in t.Engine.Setup()
+                from p in t.Engine.SetStartingPlayer(t.StartingPlayer)
+                from c in t.Engine.SetStartingCard(t.NotStartingPlayer, startingCard)
+                select id;
+
+            result.IfLeft(error => outputHelper.WriteLine(error));
+            result.IfRight(_ => t.Engine.GetActionHistory().Iter(a => outputHelper.WriteLine(a)));
+
+            // then
+            Assert.True(result.IsLeft);
+        }
+        private (GameEngine Engine, long StartingPlayer, long NotStartingPlayer) SetupTwoPlayerEngine()
+        {
+            var engine = _fixture.GetService<GameEngine>();
+            long startingPlayerId = engine.AddPlayer(_playerNameA).IfLeft(0);
+            long notStartingPlayerId = engine.AddPlayer(_playerNameB).IfLeft(0);
+
+            return (engine, startingPlayerId, notStartingPlayerId);
+        }
     }
+
+
 }

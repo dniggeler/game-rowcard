@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using LanguageExt;
@@ -13,6 +14,9 @@ namespace RowCardGameEngine.Game
         private long startingPlayerId;
 
         private IGameState gameState;
+
+        private readonly ConcurrentDictionary<long, Player> players =
+            new ConcurrentDictionary<long, Player>();
 
         private readonly List<string> actionHistory = new List<string>();
 
@@ -31,7 +35,7 @@ namespace RowCardGameEngine.Game
         {
             return gameState.GetPlayers();
         }
-
+        
         public Either<string, long> AddPlayer(string playerName)
         {
             return gameState.AddPlayer(playerName)
