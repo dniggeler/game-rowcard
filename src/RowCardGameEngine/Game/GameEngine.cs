@@ -10,6 +10,7 @@ namespace RowCardGameEngine.Game
     public class GameEngine
     {
         private readonly int GameId;
+        private readonly Random rnd;
         private readonly Func<GameBoard> createNewGameBoardFunc;
         private long startingPlayerId;
 
@@ -22,6 +23,7 @@ namespace RowCardGameEngine.Game
 
         public GameEngine(Random rnd, Func<GameBoard> createBoardFunc)
         {
+            this.rnd = rnd;
             createNewGameBoardFunc = createBoardFunc;
 
             gameState = new InitialGameState(rnd);
@@ -29,21 +31,53 @@ namespace RowCardGameEngine.Game
             GameId = rnd.Next();
         }
 
-        public int NumberOfPlayers => gameState.NumberOfPlayers;
+        public int NumberOfPlayers => players.Count;
 
         public ICollection<Player> GetPlayers()
         {
-            return gameState.GetPlayers();
+            return players.Values;
         }
         
         public Either<string, long> AddPlayer(string playerName)
         {
-            return gameState.AddPlayer(playerName)
-                .Map(id =>
+            if (!gameState.CanAddPlayer)
+            {
+                return "Game already started, adding player is no more possible";
+            }
+
+            if (Contains(playerName))
+            {
+                return "Player already exist";
+            }
+
+            if (players.Count == GameConfiguration.MaxPlayers)
+            {
+                return "Game is full with players";
+            }
+
+            long newPlayerId = rnd.Next();
+
+            var newPlayer = players.AddOrUpdate(
+                newPlayerId,
+                id => new Player(id, false, playerName, DateTime.Now),
+                (_, p) => p);
+
+            actionHistory.Add($"player {playerName}, {newPlayer.Id} added");
+
+            return newPlayer.Id;
+
+            bool Contains(string name)
+            {
+                foreach (KeyValuePair<long, Player> keyValuePair in players)
                 {
-                    actionHistory.Add($"player {playerName}, {id} added");
-                    return id;
-                });
+                    if (keyValuePair.Value.Name == name)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
 
         public Either<string, int> Setup()
@@ -52,7 +86,7 @@ namespace RowCardGameEngine.Game
 
             Either<string, IGameState> r =
                 from board in gameBoard.Setup(GetPlayers().ToList().AsReadOnly())
-                from newState in gameState.Setup(board)
+                from newState in gameState.Setup(board, NumberOfPlayers)
                 select newState;
 
             r.Iter(newState => gameState = newState);

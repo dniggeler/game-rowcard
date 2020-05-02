@@ -1,25 +1,20 @@
-﻿using System.Collections.Generic;
-using LanguageExt;
+﻿using LanguageExt;
 using RowCardGameEngine.Game.Models;
 
 namespace RowCardGameEngine.Game
 {
     public interface IGameState
     {
-        int NumberOfPlayers { get; }
-
         Either<string, GameBoard> GetGameBoard();
 
-        ICollection<Player> GetPlayers();
-
-        Either<string, long> AddPlayer(string playerName);
+        bool CanAddPlayer => false;
 
         Either<string, IGameState> Start();
 
-        Either<string, IGameState> PlayCard(long playerId, Card card);
+        Either<string, IGameState> PlayCard(long playerId, Card card) => "Game is not yet ready to play card";
 
-        Either<string, IGameState> Setup(GameBoard gameBoard);
+        Either<string, IGameState> Setup(GameBoard gameBoard, int numberOfPlayers);
 
-        Either<string, IGameState> Finish();
+        Either<string, IGameState> Finish() => "Game is not yet finished";
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using LanguageExt;
 using RowCardGameEngine.Game.Models;
 
@@ -7,14 +6,9 @@ namespace RowCardGameEngine.Game
 {
     internal class StartGameState : GameStateBase, IGameState
     {
-        public StartGameState(Random rnd, GameBoard gameBoard, ConcurrentDictionary<long, Player> players)
-            : base(rnd, gameBoard, players)
+        public StartGameState(Random rnd, GameBoard gameBoard)
+            : base(rnd, gameBoard)
         {
-        }
-
-        public new Either<string, long> AddPlayer(string playerName)
-        {
-            return AddPlayerNotPossible(playerName);
         }
 
         Either<string, IGameState> IGameState.Start()
@@ -28,10 +22,10 @@ namespace RowCardGameEngine.Game
                 .RemoveCardFromHand(playerId, card)
                 .Where(v => v)
                 .Bind(_ => GameBoard.SetStartingCard(card))
-                .Map<IGameState>(_ => new PlayGameState(Rnd, GameBoard, Players));
+                .Map<IGameState>(_ => new PlayGameState(Rnd, GameBoard));
         }
 
-        public Either<string, IGameState> Setup(GameBoard gameBoard)
+        public Either<string, IGameState> Setup(GameBoard gameBoard, int numberOfPlayers)
         {
             return "Game has already setup";
         }
