@@ -13,6 +13,8 @@ namespace RowCardGameEngine.Game
         private readonly Random rnd;
         private readonly Func<GameBoard> createNewGameBoardFunc;
         private long startingPlayerId;
+        private long currentPlayerId;
+        private readonly LinkedList<long> playerCircle = new LinkedList<long>();
 
         private IGameState gameState;
 
@@ -89,23 +91,44 @@ namespace RowCardGameEngine.Game
                 from newState in gameState.Setup(board, NumberOfPlayers)
                 select newState;
 
-            r.Iter(newState => gameState = newState);
+            r.Iter(newState =>
+            {
+                gameState = newState;
+            });
 
             actionHistory.Add($"Game {GameId} setup");
 
             return r.Map(_ => GameId);
         }
 
+        private void SetupPlayerCircle()
+        {
+            playerCircle.AddLast(new LinkedListNode<long>(startingPlayerId));
+
+            foreach (var player in players)
+            {
+                if (player.Key == startingPlayerId)
+                {
+                    continue;
+                }
+
+                playerCircle.AddLast(new LinkedListNode<long>(player.Key));
+            }
+        }
+
         public Either<string, Unit> SetStartingPlayer(long playerId)
         {
             startingPlayerId = playerId;
+            currentPlayerId = playerId;
 
             return gameState
                 .Start()
                 .Iter(newState =>
                 {
-                    actionHistory.Add($"Player {playerId} set as starter");
+                    SetupPlayerCircle();
                     gameState = newState;
+
+                    actionHistory.Add($"Player {playerId} set as starter");
                 });
         }
 
@@ -140,6 +163,16 @@ namespace RowCardGameEngine.Game
         public IReadOnlyCollection<string> GetActionHistory()
         {
             return actionHistory;
+        }
+
+        private long GetNextPlayer()
+        {
+            foreach (var id in playerCircle)
+            {
+                if (id == currentPlayerId)
+                {
+                }
+            }
         }
     }
 }
