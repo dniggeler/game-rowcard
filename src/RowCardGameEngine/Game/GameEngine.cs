@@ -12,9 +12,8 @@ namespace RowCardGameEngine.Game
         private readonly int GameId;
         private readonly Random rnd;
         private readonly Func<GameBoard> createNewGameBoardFunc;
+        private CircularPlayerList circularPlayerList;
         private long startingPlayerId;
-        private long currentPlayerId;
-        private readonly LinkedList<long> playerCircle = new LinkedList<long>();
 
         private IGameState gameState;
 
@@ -103,23 +102,18 @@ namespace RowCardGameEngine.Game
 
         private void SetupPlayerCircle()
         {
-            playerCircle.AddLast(new LinkedListNode<long>(startingPlayerId));
+            var playerList =
+                players
+                    .Select(p => p.Key)
+                    .ToList()
+                    .AsReadOnly();
 
-            foreach (var player in players)
-            {
-                if (player.Key == startingPlayerId)
-                {
-                    continue;
-                }
-
-                playerCircle.AddLast(new LinkedListNode<long>(player.Key));
-            }
+            this.circularPlayerList = new CircularPlayerList(playerList, startingPlayerId);
         }
 
         public Either<string, Unit> SetStartingPlayer(long playerId)
         {
             startingPlayerId = playerId;
-            currentPlayerId = playerId;
 
             return gameState
                 .Start()
@@ -163,16 +157,6 @@ namespace RowCardGameEngine.Game
         public IReadOnlyCollection<string> GetActionHistory()
         {
             return actionHistory;
-        }
-
-        private long GetNextPlayer()
-        {
-            foreach (var id in playerCircle)
-            {
-                if (id == currentPlayerId)
-                {
-                }
-            }
         }
     }
 }
