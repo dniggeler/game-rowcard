@@ -15,10 +15,5 @@ namespace RowCardGameEngine.Game
         {
             return new StartGameState(Rnd, GameBoard);
         }
-
-        public Either<string, IGameState> Setup(GameBoard gameBoard, int numberOfPlayers)
-        {
-            return "Game is already setup";
-        }
     }
 }

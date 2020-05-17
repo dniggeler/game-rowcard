@@ -7,7 +7,7 @@ using RowCardGameEngine.Game.Models;
 
 namespace RowCardGameEngine.Game
 {
-    public class GameEngine
+    public class GameEngine : IGameEngine
     {
         private readonly int GameId;
         private readonly Random rnd;
@@ -31,8 +31,6 @@ namespace RowCardGameEngine.Game
 
             GameId = rnd.Next();
         }
-
-        public int NumberOfPlayers => players.Count;
 
         public ICollection<Player> GetPlayers()
         {
@@ -87,7 +85,7 @@ namespace RowCardGameEngine.Game
 
             Either<string, IGameState> r =
                 from board in gameBoard.Setup(GetPlayers().ToList().AsReadOnly())
-                from newState in gameState.Setup(board, NumberOfPlayers)
+                from newState in gameState.Setup(board, GetPlayers().Count)
                 select newState;
 
             r.Iter(newState =>

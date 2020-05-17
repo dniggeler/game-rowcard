@@ -29,7 +29,7 @@ namespace RowCardGameEngine.Tests
             // given
 
             // when
-            var engine = _fixture.GetService<GameEngine>();
+            var engine = _fixture.GetService<IGameEngine>();
             bool result = engine.Setup().IsLeft;
 
             // then
@@ -43,7 +43,7 @@ namespace RowCardGameEngine.Tests
             var startingCard = new Card(Suits.Clubs, Ranks.Ace);
 
             // when
-            (GameEngine Engine, long StartingPlayer, long NotStartingPlayer) t
+            (IGameEngine Engine, long StartingPlayer, long NotStartingPlayer) t
                 = SetupTwoPlayerEngine();
 
             var result = from id in t.Engine.Setup()
@@ -65,8 +65,7 @@ namespace RowCardGameEngine.Tests
             var startingCard = new Card(Suits.Clubs, Ranks.Ace);
 
             // when
-            (GameEngine Engine, long StartingPlayer, long NotStartingPlayer) t
-                = SetupTwoPlayerEngine();
+            var t = SetupTwoPlayerEngine();
 
             var result = from id in t.Engine.Setup()
                 from p in t.Engine.SetStartingPlayer(t.StartingPlayer)
@@ -79,9 +78,9 @@ namespace RowCardGameEngine.Tests
             // then
             Assert.True(result.IsLeft);
         }
-        private (GameEngine Engine, long StartingPlayer, long NotStartingPlayer) SetupTwoPlayerEngine()
+        private (IGameEngine Engine, long StartingPlayer, long NotStartingPlayer) SetupTwoPlayerEngine()
         {
-            var engine = _fixture.GetService<GameEngine>();
+            var engine = _fixture.GetService<IGameEngine>();
             long startingPlayerId = engine.AddPlayer(_playerNameA).IfLeft(0);
             long notStartingPlayerId = engine.AddPlayer(_playerNameB).IfLeft(0);
 

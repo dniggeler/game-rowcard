@@ -5,18 +5,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RowCardGameEngine.Game;
 
-namespace AzulGameEngine.Controllers
+
+namespace RowCardGameEngine.Controllers
 {
     [Produces("application/json")]
     [ApiController]
     [Route("api")]
     public class GameEngineController : ControllerBase
     {
-        private readonly GameEngine gameEngine;
+        private readonly IGameEngine gameEngine;
         private readonly IChatClient chat;
 
         public GameEngineController(
-            GameEngine gameEngine,
+            IGameEngine gameEngine,
             IChatClient chat)
         {
             this.gameEngine = gameEngine;

@@ -13,11 +13,6 @@ namespace RowCardGameEngine.Game
 
         public bool CanAddPlayer => true;
 
-        public Either<string, IGameState> Start()
-        {
-            return "Game has not yet setup";
-        }
-
         public Either<string, IGameState> Setup(GameBoard gameBoard, int numberOfPlayers)
         {
             if (numberOfPlayers < GameConfiguration.MinPlayers)
