@@ -78,6 +78,7 @@ namespace RowCardGameEngine.Tests
             // then
             Assert.True(result.IsLeft);
         }
+
         private (IGameEngine Engine, long StartingPlayer, long NotStartingPlayer) SetupTwoPlayerEngine()
         {
             var engine = _fixture.GetService<IGameEngine>();

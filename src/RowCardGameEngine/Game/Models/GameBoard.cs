@@ -93,6 +93,40 @@ namespace RowCardGameEngine.Game.Models
             return Unit.Default;
         }
 
+        public Option<Card> GetHighStackCard(Suits suit)
+        {
+            if (highStacks[suit].Count == 0)
+            {
+                if (startCards.TryGetValue(suit, out Card card))
+                {
+                    return card;
+                }
+            }
+            else
+            {
+                return highStacks[suit].Peek();
+            }
+
+            return Option<Card>.None;
+        }
+
+        public Option<Card> GetLowStackCard(Suits suit)
+        {
+            if (lowStacks[suit].Count == 0)
+            {
+                if (startCards.TryGetValue(suit, out Card card))
+                {
+                    return card;
+                }
+            }
+            else
+            {
+                return lowStacks[suit].Peek();
+            }
+
+            return Option<Card>.None;
+        }
+
         public void Clear()
         {
             NumberOfRealPlayers = 0;
