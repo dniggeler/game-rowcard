@@ -93,6 +93,26 @@ namespace RowCardGameEngine.Game.Models
             return Unit.Default;
         }
 
+        public System.Collections.Generic.HashSet<Card> GetAllPossibleCards()
+        {
+            var possibleCards = new System.Collections.Generic.HashSet<Card>();
+
+            foreach (var suit in GetSuitsValues())
+            {
+                GetLowStackCard(suit)
+                    .Bind(Card.Predecessor)
+                    .Map(c => possibleCards.Add(c))
+                    .IfNone(() => possibleCards.Add(new Card(suit, startingCard.Rank)));
+
+                GetHighStackCard(suit)
+                    .Bind(Card.Successor)
+                    .Map(c => possibleCards.Add(c))
+                    .IfNone(() => possibleCards.Add(new Card(suit, startingCard.Rank)));
+            }
+
+            return possibleCards;
+        }
+
         public Option<Card> GetHighStackCard(Suits suit)
         {
             if (highStacks[suit].Count == 0)

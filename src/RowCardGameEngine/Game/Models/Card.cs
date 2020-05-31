@@ -11,8 +11,32 @@ namespace RowCardGameEngine.Game.Models
 
         public Card(Suits suit, Ranks rank)
         {
-            this.Suit = suit;
-            this.Rank = rank;
+            Suit = suit;
+            Rank = rank;
+        }
+
+        public static Option<Card> Successor(Card card)
+        {
+            if (card.Rank == Ranks.Ace)
+            {
+                return Option<Card>.None;
+            }
+
+            int rankValue = (int) card.Rank+1;
+
+            return new Card(card.Suit, (Ranks)rankValue);
+        }
+
+        public static Option<Card> Predecessor(Card card)
+        {
+            if (card.Rank == Ranks.Six)
+            {
+                return Option<Card>.None;
+            }
+
+            int rankValue = (int)card.Rank - 1;
+
+            return new Card(card.Suit, (Ranks)rankValue);
         }
 
         public static Option<int> operator -(Card card1, Option<Card> card2)
