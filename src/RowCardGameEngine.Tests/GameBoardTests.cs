@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RowCardGameEngine.Game;
 using RowCardGameEngine.Game.Models;
 using Xunit;
 using Xunit.Abstractions;
@@ -125,6 +126,19 @@ namespace RowCardGameEngine.Tests
 
             // then
             Assert.True(result);
+        }
+
+        [Fact(DisplayName = "Return All Possible Cards")]
+        public void ShouldReturnAllPossibleCards()
+        {
+            // given
+            var startingCard = new Card(Suits.Clubs, Ranks.Ace);
+            IGameEngine gameEngine = _fixture.GetService<IGameEngine>();
+
+            // when
+            (long StartingPlayer, long NotStartingPlayer) t
+                = gameEngine.SetupTwoPlayerEngine(startingCard);
+
         }
 
         [Fact(DisplayName = "Fail to add card")]

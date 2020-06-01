@@ -10,12 +10,4 @@ namespace RowCardGameEngine.Game
     {
         Option<Card> GetNextCard(Hand hand, GameBoard gameBoard);
     }
-
-    public class AutonomousPlayer : IAutonomousPlayer
-    {
-        public Option<Card> GetNextCard(Hand hand, GameBoard gameBoard)
-        {
-            return Option<Card>.None;
-        }
-    }
 }
