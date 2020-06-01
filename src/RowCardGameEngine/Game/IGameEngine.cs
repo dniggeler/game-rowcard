@@ -20,5 +20,7 @@ namespace RowCardGameEngine.Game
         Either<string, Unit> SetStartingPlayer(long playerId);
 
         Either<string, Unit> PlayCard(long playerId, Card card);
+
+        Either<string, GameBoard> GetGameBoard();
     }
 }

@@ -102,12 +102,24 @@ namespace RowCardGameEngine.Game.Models
                 GetLowStackCard(suit)
                     .Bind(Card.Predecessor)
                     .Map(c => possibleCards.Add(c))
-                    .IfNone(() => possibleCards.Add(new Card(suit, startingCard.Rank)));
+                    .IfNone(() =>
+                    {
+                        if (!startCards.ContainsKey(suit))
+                        {
+                            possibleCards.Add(new Card(suit, startingCard.Rank));
+                        }
+                    });
 
                 GetHighStackCard(suit)
                     .Bind(Card.Successor)
                     .Map(c => possibleCards.Add(c))
-                    .IfNone(() => possibleCards.Add(new Card(suit, startingCard.Rank)));
+                    .IfNone(() =>
+                    {
+                        if (!startCards.ContainsKey(suit))
+                        {
+                            possibleCards.Add(new Card(suit, startingCard.Rank));
+                        }
+                    });
             }
 
             return possibleCards;

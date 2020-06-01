@@ -1,4 +1,5 @@
-﻿using RowCardGameEngine.Game;
+﻿using LanguageExt;
+using RowCardGameEngine.Game;
 using RowCardGameEngine.Game.Models;
 using Xunit;
 using Xunit.Abstractions;
@@ -9,12 +10,12 @@ namespace RowCardGameEngine.Tests
     public class GameEngineTests : IClassFixture<GameEngineFixture>
     {
         private readonly ITestOutputHelper outputHelper;
-        private readonly GameEngineFixture _fixture;
+        private readonly GameEngineFixture fixture;
 
         public GameEngineTests(ITestOutputHelper outputHelper, GameEngineFixture fixture)
         {
             this.outputHelper = outputHelper;
-            _fixture = fixture;
+            this.fixture = fixture;
         }
 
         [Fact(DisplayName = "Fail Engine Setup")]
@@ -23,7 +24,7 @@ namespace RowCardGameEngine.Tests
             // given
 
             // when
-            var engine = _fixture.GetService<IGameEngine>();
+            var engine = fixture.GetService<IGameEngine>();
             bool result = engine.Setup().IsLeft;
 
             // then
@@ -35,11 +36,16 @@ namespace RowCardGameEngine.Tests
         {
             // given
             var startingCard = new Card(Suits.Clubs, Ranks.Ace);
-            IGameEngine gameEngine = _fixture.GetService<IGameEngine>();
+            IGameEngine gameEngine = fixture.GetService<IGameEngine>();
 
             // when
-            (long StartingPlayer, long NotStartingPlayer) t =
-                gameEngine.SetupTwoPlayerEngine(startingCard);
+            long startingPlayerId = gameEngine.AddPlayer(TestHelpers.PlayerNameA).IfLeft(0);
+            long notStartingPlayerId = gameEngine.AddPlayer(TestHelpers.PlayerNameB).IfLeft(0);
+
+            var result = from id in gameEngine.Setup()
+                from p in gameEngine.SetStartingPlayer(startingPlayerId)
+                from c in gameEngine.SetStartingCard(startingPlayerId, startingCard)
+                select id;
 
             result.IfLeft(error => outputHelper.WriteLine(error));
             result.IfRight(_ => gameEngine.GetActionHistory().Iter(a => outputHelper.WriteLine(a)));
@@ -53,15 +59,15 @@ namespace RowCardGameEngine.Tests
         {
             // given
             var startingCard = new Card(Suits.Clubs, Ranks.Ace);
-            IGameEngine gameEngine = _fixture.GetService<IGameEngine>();
+            IGameEngine gameEngine = fixture.GetService<IGameEngine>();
 
             // when
-            (long StartingPlayer, long NotStartingPlayer) t =
-                gameEngine.SetupTwoPlayerEngine(startingCard);
+            long startingPlayerId = gameEngine.AddPlayer(TestHelpers.PlayerNameA).IfLeft(0);
+            long notStartingPlayerId = gameEngine.AddPlayer(TestHelpers.PlayerNameB).IfLeft(0);
 
             var result = from id in gameEngine.Setup()
-                from p in gameEngine.SetStartingPlayer(t.StartingPlayer)
-                from c in gameEngine.SetStartingCard(t.NotStartingPlayer, startingCard)
+                from p in gameEngine.SetStartingPlayer(startingPlayerId)
+                from c in gameEngine.SetStartingCard(notStartingPlayerId, startingCard)
                 select id;
 
             result.IfLeft(error => outputHelper.WriteLine(error));
@@ -71,8 +77,37 @@ namespace RowCardGameEngine.Tests
             Assert.True(result.IsLeft);
         }
 
+        [Fact(DisplayName = "Return All Possible Cards")]
+        public void ShouldReturnAllPossibleCards()
+        {
+            // given
+            var startingCard = new Card(Suits.Clubs, Ranks.Ace);
 
+            IGameEngine gameEngine = fixture.GetService<IGameEngine>();
+
+            // when
+            (long startingPlayer, long notStartingPlayer) = gameEngine.SetupWithTwoPlayer(startingCard);
+
+            bool result
+                = gameEngine.GetGameBoard()
+                .Map(b => b.GetAllPossibleCards())
+                .Match(
+                    Right: h => h.SetEquals(GetExpectedPossibleCards()),
+                    Left: _ => false);
+
+            // then
+            Assert.True(result);
+
+            System.Collections.Generic.HashSet<Card> GetExpectedPossibleCards()
+            {
+                return new System.Collections.Generic.HashSet<Card>
+                {
+                    new Card(Suits.Clubs, Ranks.King),
+                    new Card(Suits.Diamonds, Ranks.Ace),
+                    new Card(Suits.Hearts, Ranks.Ace),
+                    new Card(Suits.Spades, Ranks.Ace),
+                };
+            }
+        }
     }
-
-
 }

@@ -9,7 +9,7 @@ namespace RowCardGameEngine.Game
 {
     public class GameEngine : IGameEngine
     {
-        private readonly int GameId;
+        private readonly int gameId;
         private readonly Random rnd;
         private readonly Func<GameBoard> createNewGameBoardFunc;
         private CircularPlayerList circularPlayerList;
@@ -29,7 +29,7 @@ namespace RowCardGameEngine.Game
 
             gameState = new InitialGameState(rnd);
 
-            GameId = rnd.Next();
+            gameId = rnd.Next();
         }
 
         public ICollection<Player> GetPlayers()
@@ -93,9 +93,9 @@ namespace RowCardGameEngine.Game
                 gameState = newState;
             });
 
-            actionHistory.Add($"Game {GameId} setup");
+            actionHistory.Add($"Game {gameId} setup");
 
-            return r.Map(_ => GameId);
+            return r.Map(_ => gameId);
         }
 
         private void SetupPlayerCircle()
@@ -150,6 +150,11 @@ namespace RowCardGameEngine.Game
                     actionHistory.Add($"Player {playerId} played card {card}");
                     gameState = newState;
                 });
+        }
+
+        public Either<string, GameBoard> GetGameBoard()
+        {
+            return gameState.GetGameBoard();
         }
 
         public IReadOnlyCollection<string> GetActionHistory()
