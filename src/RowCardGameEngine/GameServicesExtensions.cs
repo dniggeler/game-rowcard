@@ -17,7 +17,7 @@ namespace RowCardGameEngine
 
             collection.AddSingleton<IChatClient, ChatClient>();
             collection.AddSingleton<ChatThread>();
-            collection.AddSingleton<IGameEngine, GameEngine>();
+            collection.AddTransient<IGameEngine, GameEngine>();
             collection.AddTransient<Deck>();
             collection.AddTransient<GameBoard>();
             collection.AddSingleton<Func<GameBoard>>(ctx => ctx.GetRequiredService<GameBoard>);

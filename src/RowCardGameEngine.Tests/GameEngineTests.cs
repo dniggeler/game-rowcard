@@ -77,8 +77,8 @@ namespace RowCardGameEngine.Tests
             Assert.True(result.IsLeft);
         }
 
-        [Fact(DisplayName = "Return All Possible Cards")]
-        public void ShouldReturnAllPossibleCards()
+        [Fact(DisplayName = "Return All Playable Cards")]
+        public void ShouldReturnAllPlayableCards()
         {
             // given
             var startingCard = new Card(Suits.Clubs, Ranks.Ace);
@@ -88,25 +88,36 @@ namespace RowCardGameEngine.Tests
             // when
             (long startingPlayer, long notStartingPlayer) = gameEngine.SetupWithTwoPlayer(startingCard);
 
-            bool result
+            var playableCardsPlayer1
                 = gameEngine.GetGameBoard()
-                .Map(b => b.GetAllPossibleCards())
-                .Match(
-                    Right: h => h.SetEquals(GetExpectedPossibleCards()),
-                    Left: _ => false);
+                .Map(b => b.GetPlayableCards(startingPlayer))
+                .IfLeft(HashSet<Card>.Empty);
+
+            var playableCardsPlayer2
+                = gameEngine.GetGameBoard()
+                    .Map(b => b.GetPlayableCards(notStartingPlayer))
+                    .IfLeft(HashSet<Card>.Empty);
+
+            HashSet<Card> playableCards = new HashSet<Card>()
+                .AddRange(playableCardsPlayer1)
+                .AddRange(playableCardsPlayer2);
+
+            HashSet<Card> expectedPlayableCards = GetExpectedFeasibleCards();
+
+            var result = playableCards == expectedPlayableCards;
 
             // then
             Assert.True(result);
 
-            System.Collections.Generic.HashSet<Card> GetExpectedPossibleCards()
+            LanguageExt.HashSet<Card> GetExpectedFeasibleCards()
             {
-                return new System.Collections.Generic.HashSet<Card>
-                {
-                    new Card(Suits.Clubs, Ranks.King),
-                    new Card(Suits.Diamonds, Ranks.Ace),
-                    new Card(Suits.Hearts, Ranks.Ace),
-                    new Card(Suits.Spades, Ranks.Ace),
-                };
+                var cards = new HashSet<Card>();
+
+                return cards
+                    .Add(new Card(Suits.Clubs, Ranks.King))
+                    .Add(new Card(Suits.Diamonds, Ranks.Ace))
+                    .Add(new Card(Suits.Hearts, Ranks.Ace))
+                    .Add(new Card(Suits.Spades, Ranks.Ace));
             }
         }
     }

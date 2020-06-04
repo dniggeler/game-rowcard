@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
+using LanguageExt;
 
 namespace RowCardGameEngine.Game.Models
 {
     public class Hand
     {
         private readonly int numberOfCards;
-        private readonly List<Card> cards = new List<Card>();
+        private HashSet<Card> cards = HashSet<Card>.Empty;
 
         public Hand(int numberOfCards)
         {
             this.numberOfCards = numberOfCards;
         }
+
+        public HashSet<Card> GetCards() => cards;
 
         public int Count => cards.Count;
 
@@ -26,12 +28,19 @@ namespace RowCardGameEngine.Game.Models
                 throw new ArgumentException($"Card {card.AsPokerKey()} already exists");
             }
 
-            cards.Add(card);
+            cards = cards.Add(card);
         }
 
         public bool Remove(Card card)
         {
-            return cards.Remove(card);
+            if (cards.Contains(card))
+            {
+                cards = cards.Remove(card);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

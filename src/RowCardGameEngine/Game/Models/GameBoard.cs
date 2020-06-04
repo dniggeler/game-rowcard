@@ -93,31 +93,38 @@ namespace RowCardGameEngine.Game.Models
             return Unit.Default;
         }
 
-        public System.Collections.Generic.HashSet<Card> GetAllPossibleCards()
+        public LanguageExt.HashSet<Card> GetPlayableCards(long playerId)
         {
-            var possibleCards = new System.Collections.Generic.HashSet<Card>();
+            var feasibleCards = GetFeasibleCards();
+
+            return feasibleCards.Intersect(hands[playerId].GetCards());
+        }
+
+        public LanguageExt.HashSet<Card> GetFeasibleCards()
+        {
+            var possibleCards = new LanguageExt.HashSet<Card>();
 
             foreach (var suit in GetSuitsValues())
             {
                 GetLowStackCard(suit)
                     .Bind(Card.Predecessor)
-                    .Map(c => possibleCards.Add(c))
+                    .Map(c => possibleCards = possibleCards.AddOrUpdate(c))
                     .IfNone(() =>
                     {
                         if (!startCards.ContainsKey(suit))
                         {
-                            possibleCards.Add(new Card(suit, startingCard.Rank));
+                            possibleCards = possibleCards.AddOrUpdate(new Card(suit, startingCard.Rank));
                         }
                     });
 
                 GetHighStackCard(suit)
                     .Bind(Card.Successor)
-                    .Map(c => possibleCards.Add(c))
+                    .Map(c => possibleCards = possibleCards.AddOrUpdate(c))
                     .IfNone(() =>
                     {
                         if (!startCards.ContainsKey(suit))
                         {
-                            possibleCards.Add(new Card(suit, startingCard.Rank));
+                            possibleCards = possibleCards.AddOrUpdate(new Card(suit, startingCard.Rank));
                         }
                     });
             }
