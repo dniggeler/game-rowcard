@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using LanguageExt;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using LanguageExt;
 using RowCardGameEngine.Game.Models;
-
 
 namespace RowCardGameEngine.Game
 {
     public interface IAutonomousPlayer
     {
-        Option<Card> GetNextCard(Hand hand, GameBoard gameBoard);
+        Option<Card> GetNextCard(IGameBoardInfo gameBoard);
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace RowCardGameEngine.Game.Models
 {
-    public class GameBoard
+    public class GameBoard : IGameBoardInfo
     {
         private readonly Deck deck;
         private Card startingCard;
