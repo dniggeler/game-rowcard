@@ -17,7 +17,7 @@ namespace RowCardGameEngine.Tests
 
             var result = from id in gameEngine.Setup()
                 from p in gameEngine.SetStartingPlayer(startingPlayerId)
-                from c in gameEngine.SetStartingCard(startingPlayerId, startingCard)
+                from c in gameEngine.SetStartCard(startingPlayerId, startingCard)
                 select id;
 
             return (startingPlayerId, notStartingPlayerId);

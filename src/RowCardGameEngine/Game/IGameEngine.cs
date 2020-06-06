@@ -15,7 +15,7 @@ namespace RowCardGameEngine.Game
 
         Either<string, int> Setup();
 
-        Either<string, Unit> SetStartingCard(long playerId, Card card);
+        Either<string, Unit> SetStartCard(long playerId, Card card);
 
         Either<string, Unit> SetStartingPlayer(long playerId);
 

@@ -98,33 +98,22 @@ namespace RowCardGameEngine.Game
             return r.Map(_ => gameId);
         }
 
-        private void SetupPlayerCircle()
-        {
-            var playerList =
-                players
-                    .Select(p => p.Key)
-                    .ToList()
-                    .AsReadOnly();
-
-            this.circularPlayerList = new CircularPlayerList(playerList, startingPlayerId);
-        }
-
         public Either<string, Unit> SetStartingPlayer(long playerId)
         {
-            startingPlayerId = playerId;
+            return gameState.Start()
+                    .Bind<Unit>(s =>
+                    {
+                        startingPlayerId = playerId;
 
-            return gameState
-                .Start()
-                .Iter(newState =>
-                {
-                    SetupPlayerCircle();
-                    gameState = newState;
+                        SetupPlayerCircle();
+                        gameState = s;
+                        actionHistory.Add($"Player {playerId} set as starter");
 
-                    actionHistory.Add($"Player {playerId} set as starter");
-                });
+                        return Unit.Default;
+                    });
         }
 
-        public Either<string, Unit> SetStartingCard(long playerId, Card card)
+        public Either<string, Unit> SetStartCard(long playerId, Card card)
         {
             if (playerId != startingPlayerId)
             {
@@ -133,11 +122,13 @@ namespace RowCardGameEngine.Game
 
             return gameState
                 .PlayCard(playerId, card)
-                .Iter(newState =>
+                .Bind<Unit>(newState =>
                 {
                     actionHistory.Add($"Player {playerId} set {card} as starting card");
 
                     gameState = newState;
+
+                    return Unit.Default;
                 });
         }
 
@@ -160,6 +151,17 @@ namespace RowCardGameEngine.Game
         public IReadOnlyCollection<string> GetActionHistory()
         {
             return actionHistory;
+        }
+
+        private void SetupPlayerCircle()
+        {
+            var playerList =
+                players
+                    .Select(p => p.Key)
+                    .ToList()
+                    .AsReadOnly();
+
+            this.circularPlayerList = new CircularPlayerList(playerList, startingPlayerId);
         }
     }
 }

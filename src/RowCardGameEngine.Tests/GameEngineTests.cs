@@ -44,7 +44,7 @@ namespace RowCardGameEngine.Tests
 
             var result = from id in gameEngine.Setup()
                 from p in gameEngine.SetStartingPlayer(startingPlayerId)
-                from c in gameEngine.SetStartingCard(startingPlayerId, startingCard)
+                from c in gameEngine.SetStartCard(startingPlayerId, startingCard)
                 select id;
 
             result.IfLeft(error => outputHelper.WriteLine(error));
@@ -67,7 +67,7 @@ namespace RowCardGameEngine.Tests
 
             var result = from id in gameEngine.Setup()
                 from p in gameEngine.SetStartingPlayer(startingPlayerId)
-                from c in gameEngine.SetStartingCard(notStartingPlayerId, startingCard)
+                from c in gameEngine.SetStartCard(notStartingPlayerId, startingCard)
                 select id;
 
             result.IfLeft(error => outputHelper.WriteLine(error));

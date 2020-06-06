@@ -3,7 +3,9 @@ using AzulGameEngine.ChatHub;
 using LanguageExt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RowCardGameEngine.Controllers.Models;
 using RowCardGameEngine.Game;
+using RowCardGameEngine.Game.Models;
 
 
 namespace RowCardGameEngine.Controllers
@@ -13,14 +15,15 @@ namespace RowCardGameEngine.Controllers
     [Route("api")]
     public class GameEngineController : ControllerBase
     {
-        private readonly IGameEngine gameEngine;
+        private const long GameEngineId = 1;
+        private readonly GameManager gameManager;
         private readonly IChatClient chat;
 
         public GameEngineController(
-            IGameEngine gameEngine,
+            GameManager gameManager,
             IChatClient chat)
         {
-            this.gameEngine = gameEngine;
+            this.gameManager = gameManager;
             this.chat = chat;
         }
 
@@ -28,7 +31,8 @@ namespace RowCardGameEngine.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult CreateGame()
         {
-            return gameEngine.Setup()
+            return gameManager.GetEngine(GameEngineId)
+                .Setup()
                 .Match<ActionResult>(
                 Right: id => Created(HttpContext.Request.Path.Value, id),
                 Left: BadRequest);
@@ -38,7 +42,7 @@ namespace RowCardGameEngine.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Get()
         {
-            return Ok(gameEngine.GetPlayers());
+            return Ok(gameManager.GetEngine(GameEngineId).GetPlayers());
         }
 
         [HttpPost("players/{name}")]
@@ -50,7 +54,7 @@ namespace RowCardGameEngine.Controllers
                 return BadRequest("invalid player name");
             }
 
-            Either<string, long> command = gameEngine.AddPlayer(name);
+            Either<string, long> command = gameManager.GetEngine(GameEngineId).AddPlayer(name);
 
             ActionResult response = command
                     .Match<ActionResult>(
@@ -63,6 +67,42 @@ namespace RowCardGameEngine.Controllers
             }
 
             return response;
+        }
+
+        [HttpPost("game/setStartingPlayer")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult SetStartingPlayer(long playerId)
+        {
+            return
+                gameManager.GetEngine(GameEngineId)
+                    .SetStartingPlayer(playerId)
+                    .Match<ActionResult>(
+                            Right: _ => Ok(),
+                            Left: BadRequest);
+        }
+
+        [HttpPost("game/setStartCard")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult SetStartCard([FromBody]SetStartCardRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest(nameof(request));
+            }
+
+            return
+                gameManager.GetEngine(GameEngineId)
+                    .SetStartCard(request.PlayerId, new Card(request.Suit, request.Rank))
+                    .Match<ActionResult>(
+                        Right: _ => Ok(),
+                        Left: BadRequest);
+        }
+
+        [HttpGet("game/history")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult GetHistory()
+        {
+            return Ok(gameManager.GetEngine(GameEngineId).GetActionHistory());
         }
     }
 }
