@@ -1,9 +1,13 @@
-﻿namespace RowCardGameEngine.Game.Models
+﻿using LanguageExt;
+
+namespace RowCardGameEngine.Game.Models
 {
     public interface IGameBoardInfo
     {
-        public LanguageExt.HashSet<Card> GetFeasibleCards();
+        public HashSet<Card> GetFeasibleCards();
 
-        public LanguageExt.HashSet<Card> GetPlayableCards(long playerId);
+        public HashSet<Card> GetPlayableCards(long playerId);
+
+        public Option<Hand> GetHand(long playerId);
     }
 }

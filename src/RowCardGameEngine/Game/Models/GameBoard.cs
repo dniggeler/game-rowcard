@@ -100,6 +100,15 @@ namespace RowCardGameEngine.Game.Models
             return feasibleCards.Intersect(hands[playerId].GetCards());
         }
 
+        public Option<Hand> GetHand(long playerId)
+        {
+            if (hands.TryGetValue(playerId, out Hand value))
+            {
+                return value;
+            }
+            return Option<Hand>.None;
+        }
+
         public LanguageExt.HashSet<Card> GetFeasibleCards()
         {
             var possibleCards = new LanguageExt.HashSet<Card>();
