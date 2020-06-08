@@ -22,7 +22,7 @@ namespace RowCardGameEngine.Game.Models
             this.logger = logger;
             this.deck = deck;
 
-            foreach (var s in GetSuitsValues())
+            foreach (Suits s in GetSuitsValues())
             {
                 lowStacks.Add(s, new Stack<Card>());
                 highStacks.Add(s, new Stack<Card>());
@@ -39,7 +39,7 @@ namespace RowCardGameEngine.Game.Models
             int numberOfMachinePlayers = players.Count(p => p.IsMachinePlayer);
             int numberOfRealPlayers = players.Count - numberOfMachinePlayers;
 
-            var result = SetNumberOfPlayers(numberOfRealPlayers, numberOfMachinePlayers);
+            Either<string, Unit> result = SetNumberOfPlayers(numberOfRealPlayers, numberOfMachinePlayers);
             if (result.IsLeft)
             {
                 return this;
@@ -49,7 +49,7 @@ namespace RowCardGameEngine.Game.Models
             int numberOfCards = deck.Count / NumberOfPlayers;
             foreach (Player player in players)
             {
-                var hand = new Hand(numberOfCards);
+                Hand hand = new Hand(numberOfCards);
 
                 for (int ii = 0; ii < numberOfCards; ii++)
                 {
@@ -95,7 +95,7 @@ namespace RowCardGameEngine.Game.Models
 
         public LanguageExt.HashSet<Card> GetPlayableCards(long playerId)
         {
-            var feasibleCards = GetFeasibleCards();
+            LanguageExt.HashSet<Card> feasibleCards = GetFeasibleCards();
 
             return feasibleCards.Intersect(hands[playerId].GetCards());
         }
@@ -111,9 +111,9 @@ namespace RowCardGameEngine.Game.Models
 
         public LanguageExt.HashSet<Card> GetFeasibleCards()
         {
-            var possibleCards = new LanguageExt.HashSet<Card>();
+            LanguageExt.HashSet<Card> possibleCards = new LanguageExt.HashSet<Card>();
 
-            foreach (var suit in GetSuitsValues())
+            foreach (Suits suit in GetSuitsValues())
             {
                 GetLowStackCard(suit)
                     .Bind(Card.Predecessor)
@@ -211,7 +211,7 @@ namespace RowCardGameEngine.Game.Models
             Ranks minRank = startCards[suit].Rank;
             if (lowStacks[suit].Count > 0)
             {
-                var topCard = lowStacks[suit].Peek();
+                Card topCard = lowStacks[suit].Peek();
                 if (topCard.Rank < minRank)
                 {
                     minRank = topCard.Rank;
@@ -226,7 +226,7 @@ namespace RowCardGameEngine.Game.Models
             Ranks maxRank = startCards[suit].Rank;
             if (highStacks[suit].Count > 0)
             {
-                var topCard = highStacks[suit].Peek();
+                Card topCard = highStacks[suit].Peek();
                 if (topCard.Rank > maxRank)
                 {
                     maxRank = topCard.Rank;
@@ -280,11 +280,16 @@ namespace RowCardGameEngine.Game.Models
 
         private Either<string, Unit> AddCardInternal(Card card)
         {
-            var stack = GetStack(); // high or low
+            Stack<Card> stack = GetStack(); // high or low
 
             if (stack.Count == 0)
             {
                 Card startCard = startCards[card.Suit];
+
+                if (startCard == card)
+                {
+                    return "Start card is already set.";
+                }
 
                 return PushCard(startCard);
             }

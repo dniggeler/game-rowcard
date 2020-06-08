@@ -124,9 +124,12 @@ namespace RowCardGameEngine.Game
                 .PlayCard(playerId, card)
                 .Bind<Unit>(newState =>
                 {
+
                     actionHistory.Add($"Player {playerId} set {card} as starting card");
 
                     gameState = newState;
+
+                    circularPlayerList.GetNext();
 
                     return Unit.Default;
                 });
@@ -134,12 +137,21 @@ namespace RowCardGameEngine.Game
 
         public Either<string, Unit> PlayCard(long playerId, Card card)
         {
+            if (playerId != circularPlayerList.CurrentPlayer)
+            {
+                return $"Current player is {circularPlayerList.CurrentPlayer} not player {playerId}";
+            }
+
             return gameState
                 .PlayCard(playerId, card)
-                .Iter(newState =>
+                .Map(newState =>
                 {
-                    actionHistory.Add($"Player {playerId} played card {card}");
+                    actionHistory.Add($"Player {playerId} played card {card.Suit}/{card.Rank}");
                     gameState = newState;
+
+                    circularPlayerList.GetNext();
+
+                    return Unit.Default;
                 });
         }
 
@@ -161,7 +173,7 @@ namespace RowCardGameEngine.Game
                     .ToList()
                     .AsReadOnly();
 
-            this.circularPlayerList = new CircularPlayerList(playerList, startingPlayerId);
+            circularPlayerList = new CircularPlayerList(playerList, startingPlayerId);
         }
     }
 }

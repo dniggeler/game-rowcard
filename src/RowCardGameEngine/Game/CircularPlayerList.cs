@@ -7,8 +7,9 @@ namespace RowCardGameEngine.Game
 {
     public class CircularPlayerList
     {
-        private long currentPlayer;
         private readonly LinkedList<long> players;
+
+        public long CurrentPlayer { get; set; }
 
         public CircularPlayerList(IReadOnlyCollection<long> players, long startingPlayer)
         {
@@ -18,7 +19,7 @@ namespace RowCardGameEngine.Game
                 throw new ArgumentException("players list is null or empty");
             }
 
-            this.currentPlayer = startingPlayer;
+            CurrentPlayer = startingPlayer;
 
             this.players = new LinkedList<long>(players);
         }
@@ -26,7 +27,7 @@ namespace RowCardGameEngine.Game
         public Option<long> GetNext()
         {
             var currentLinkedNode =
-                players.Find(currentPlayer);
+                players.Find(CurrentPlayer);
 
             if (currentLinkedNode == null)
             {
@@ -40,7 +41,7 @@ namespace RowCardGameEngine.Game
                 nextLinkedNode = players.First;
             }
 
-            currentPlayer = nextLinkedNode.Value;
+            CurrentPlayer = nextLinkedNode.Value;
 
             return nextLinkedNode.Value;
         }

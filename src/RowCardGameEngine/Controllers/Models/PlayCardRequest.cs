@@ -3,7 +3,7 @@
 
 namespace RowCardGameEngine.Controllers.Models
 {
-    public class SetStartCardRequest
+    public class PlayCardRequest
     {
         public long PlayerId { get; set; }
         public Suits Suit { get; set; }

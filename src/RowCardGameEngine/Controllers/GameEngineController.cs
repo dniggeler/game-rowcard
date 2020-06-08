@@ -83,7 +83,7 @@ namespace RowCardGameEngine.Controllers
 
         [HttpPost("game/setStartCard")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult SetStartCard([FromBody]SetStartCardRequest request)
+        public ActionResult SetStartCard([FromBody]PlayCardRequest request)
         {
             if (request == null)
             {
@@ -93,6 +93,23 @@ namespace RowCardGameEngine.Controllers
             return
                 gameManager.GetEngine(GameEngineId)
                     .SetStartCard(request.PlayerId, new Card(request.Suit, request.Rank))
+                    .Match<ActionResult>(
+                        Right: _ => Ok(),
+                        Left: BadRequest);
+        }
+
+        [HttpPost("game/playCard")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult PlayCard([FromBody] PlayCardRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest(nameof(request));
+            }
+
+            return
+                gameManager.GetEngine(GameEngineId)
+                    .PlayCard(request.PlayerId, new Card(request.Suit, request.Rank))
                     .Match<ActionResult>(
                         Right: _ => Ok(),
                         Left: BadRequest);
