@@ -121,5 +121,12 @@ namespace RowCardGameEngine.Controllers
         {
             return Ok(gameManager.GetEngine(GameEngineId).GetActionHistory());
         }
+
+        [HttpPost("game/reset")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public ActionResult Reset()
+        {
+            return Ok(gameManager.GetEngine(GameEngineId).Reset());
+        }
     }
 }

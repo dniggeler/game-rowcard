@@ -22,5 +22,7 @@ namespace RowCardGameEngine.Game
         Either<string, Unit> PlayCard(long playerId, Card card);
 
         Either<string, GameBoard> GetGameBoard();
+
+        Either<string, int> Reset();
     }
 }
