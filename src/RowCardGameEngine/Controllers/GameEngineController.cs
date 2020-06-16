@@ -42,7 +42,9 @@ namespace RowCardGameEngine.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Get()
         {
-            return Ok(gameManager.GetEngine(GameEngineId).GetPlayers());
+            var players = gameManager.GetEngine(GameEngineId).GetPlayers();
+
+            return Ok(players);
         }
 
         [HttpPost("players/{name}")]
@@ -126,7 +128,10 @@ namespace RowCardGameEngine.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult Reset()
         {
-            return Ok(gameManager.GetEngine(GameEngineId).Reset());
+            var result = gameManager.GetEngine(GameEngineId).Reset();
+            return result.Match(
+                Right: id => Ok(id),
+                Left: Ok);
         }
     }
 }

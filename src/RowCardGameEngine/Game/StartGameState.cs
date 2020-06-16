@@ -19,5 +19,10 @@ namespace RowCardGameEngine.Game
                 .Bind(_ => GameBoard.SetStartingCard(card))
                 .Map<IGameState>(_ => new PlayGameState(Rnd, GameBoard));
         }
+
+        public Either<string, int> Reset()
+        {
+
+        }
     }
 }

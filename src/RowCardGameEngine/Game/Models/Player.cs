@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using LanguageExt;
 
 namespace RowCardGameEngine.Game.Models
 {
-    public class Player : Record<Player>
+    public class Player
     {
-        public readonly long Id;
-
+        public long Id { get; set; }
         public bool IsMachinePlayer { get; set; }
         public string Name { get; set; }
         public DateTime JoinedAt { get; set; }
