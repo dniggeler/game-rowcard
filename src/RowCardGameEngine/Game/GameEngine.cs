@@ -163,13 +163,12 @@ namespace RowCardGameEngine.Game
         public Either<string, int> Reset()
         {
             var gameBoard = createNewGameBoardFunc();
-            gameState = new InitialGameState(rnd);
-
+            
             Either<string, IGameState> r =
                 from s in gameState.Reset()
                 from board in gameBoard.Setup(GetPlayers().ToList().AsReadOnly())
                 from newState in s.Setup(board, GetPlayers().Count)
-                select newState;
+                    select newState;
             
             actionHistory.Add($"Game {gameId} reset");
 

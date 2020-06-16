@@ -15,5 +15,10 @@ namespace RowCardGameEngine.Game
         {
             return new StartGameState(Rnd, GameBoard);
         }
+
+        public Either<string, IGameState> Reset()
+        {
+            return new InitialGameState(Rnd);
+        }
     }
 }

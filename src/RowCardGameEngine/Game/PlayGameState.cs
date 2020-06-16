@@ -17,5 +17,10 @@ namespace RowCardGameEngine.Game
                 .PushCard(card)
                 .Map<IGameState>(_ => this);
         }
+
+        public Either<string, IGameState> Reset()
+        {
+            return new InitialGameState(Rnd);
+        }
     }
 }

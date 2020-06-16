@@ -20,9 +20,9 @@ namespace RowCardGameEngine.Game
                 .Map<IGameState>(_ => new PlayGameState(Rnd, GameBoard));
         }
 
-        public Either<string, int> Reset()
+        public Either<string, IGameState> Reset()
         {
-
+            return new InitialGameState(Rnd);
         }
     }
 }
