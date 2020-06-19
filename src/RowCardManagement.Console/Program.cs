@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace AzulManagement.Console
+namespace RowCardManagement.Console
 {
     class Program
     {
@@ -46,9 +46,6 @@ namespace AzulManagement.Console
                         case "c":
                             await CreateGame(httpClient);
                             break;
-                        case "b":
-                            await StartGame(httpClient);
-                            break;
                         case "p":
                             await GetPlayers(httpClient);
                             break;
@@ -69,11 +66,7 @@ namespace AzulManagement.Console
             var response = await httpClient.PostAsync("game", null);
         }
 
-        private static async Task StartGame(HttpClient httpClient)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         private static async Task SendMessage(
             string message, HubConnection connection)
         {

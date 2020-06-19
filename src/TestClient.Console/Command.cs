@@ -4,7 +4,7 @@ using LanguageExt;
 
 namespace TestClient.Console
 {
-    public enum ClientAction { None, Quit, Send, JoinGame, Help }
+    public enum ClientAction { None, Quit, Send, JoinGame, Autonomous, Reset, Help }
 
     public sealed class Command
     {
@@ -39,9 +39,11 @@ namespace TestClient.Console
             return actionStr switch
             {
                 "q" => new Command(ClientAction.Quit),
-                "j" => new Command(ClientAction.JoinGame),
+                "j" => new Command(ClientAction.JoinGame, GetOption(1)),
                 "s" => new Command(ClientAction.Send, GetOption(1)),
                 "h" => new Command(ClientAction.Help),
+                "p" => new Command(ClientAction.Autonomous),
+                "r" => new Command(ClientAction.Reset),
                 _ => new Command(ClientAction.None)
             };
 

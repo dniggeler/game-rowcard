@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -35,12 +33,7 @@ namespace TestClient.Console
 
             if (connection.State == HubConnectionState.Connected)
             {
-                HttpClient httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri($"{BaseAddress}/api/game/");
-
-                Random rnd = new Random();
-
-                string playerName = $"toni-{rnd.Next(100)}";
+                RowCardServiceClient rowCardServiceClient = new RowCardServiceClient();
 
                 bool isProcessing = true;
                 while (isProcessing)
@@ -54,24 +47,57 @@ namespace TestClient.Console
                             isProcessing = false;
                             break;
                         }
+                        case ClientAction.Autonomous:
+                            await PlayAutonomousAsync(rowCardServiceClient);
+                            break;
+
                         case ClientAction.Help:
                             PrintUsage();
                             break;
+
                         case ClientAction.Send:
-                            await SendMessage(playerName, cmd, connection);
+                        {
+                            await SendMessage(cmd.Option1.IfNone(""), cmd, connection);
+                        }
                             break;
+
                         case ClientAction.JoinGame:
-                            await JoinGame(playerName, httpClient);
+                        {
+                            await rowCardServiceClient.JoinAsync(cmd.Option1.IfNone(""));
+                        }
                             break;
+
+                        case ClientAction.Reset:
+                            await rowCardServiceClient.ResetAsync();
+                            break;
+
                         default: continue;
                     }
                 }
             }
         }
 
-        private static async Task JoinGame(string playerName, HttpClient httpClient)
+        private static async Task PlayAutonomousAsync(RowCardServiceClient rowCardServiceClient)
         {
-            var response = await httpClient.PostAsync($"players/{playerName}",null);
+            string playerName1 = "p1";
+            string playerName2 = "p2";
+            string playerName3 = "p3";
+            string playerName4 = "p4";
+
+            var pid1 = await rowCardServiceClient.JoinAsync(playerName1);
+            var pid2 = await rowCardServiceClient.JoinAsync(playerName2);
+            var pid3 = await rowCardServiceClient.JoinAsync(playerName3);
+            var pid4 = await rowCardServiceClient.JoinAsync(playerName4);
+
+            System.Console.WriteLine($"{playerName1}({pid1}) created");
+            System.Console.WriteLine($"{playerName2}({pid2}) created");
+            System.Console.WriteLine($"{playerName3}({pid3}) created");
+            System.Console.WriteLine($"{playerName4}({pid4}) created");
+
+            int gameId = await rowCardServiceClient.CreateGameAsync();
+            System.Console.WriteLine($"Game({gameId}) created");
+
+            await rowCardServiceClient.SetStartingPlayerAsync(pid1);
         }
 
         private static void PrintUsage()
@@ -81,6 +107,8 @@ namespace TestClient.Console
             sb.AppendLine("s: <message> - send message to chat");
             sb.AppendLine("j: <player name> - join the game");
             sb.AppendLine("q: - quit the client");
+            sb.AppendLine("r: - reset the game");
+            sb.AppendLine("p: - play autonomous");
             sb.AppendLine("h: - this message");
         }
 
