@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using RowCardGame;
+
 
 namespace TestClient.Console
 {
@@ -9,7 +11,7 @@ namespace TestClient.Console
         private const string ChatHubName = "chatHub";
         private const string BaseAddress = "https://localhost:44380";
 
-        static async Task Main(string[] args)
+        static async Task Main(string[] _)
         {
             string url = $"{BaseAddress}/{ChatHubName}";
 
@@ -33,7 +35,8 @@ namespace TestClient.Console
 
             if (connection.State == HubConnectionState.Connected)
             {
-                RowCardServiceClient rowCardServiceClient = new RowCardServiceClient();
+                RowCardServiceClient rowCardServiceClient =
+                    new RowCardServiceClient();
 
                 bool isProcessing = true;
                 while (isProcessing)

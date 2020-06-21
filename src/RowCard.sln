@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestClient.Console", "TestC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RowCardManagement.Console", "RowCardManagement.Console\RowCardManagement.Console.csproj", "{44AB69D3-EBEA-4525-A985-9333A9C9DADA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RowCardGameEngine.Tests", "RowCardGameEngine.Tests\RowCardGameEngine.Tests.csproj", "{2FDBFDAB-A3AA-4E38-B9DC-889FD7AED29E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RowCardGameEngine.Tests", "RowCardGameEngine.Tests\RowCardGameEngine.Tests.csproj", "{2FDBFDAB-A3AA-4E38-B9DC-889FD7AED29E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RowCardServiceClient", "RowCardServiceClient\RowCardServiceClient.csproj", "{FDDD681C-6B4F-4696-BC32-124B7E6B4162}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2FDBFDAB-A3AA-4E38-B9DC-889FD7AED29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FDBFDAB-A3AA-4E38-B9DC-889FD7AED29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FDBFDAB-A3AA-4E38-B9DC-889FD7AED29E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDDD681C-6B4F-4696-BC32-124B7E6B4162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDDD681C-6B4F-4696-BC32-124B7E6B4162}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDDD681C-6B4F-4696-BC32-124B7E6B4162}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDDD681C-6B4F-4696-BC32-124B7E6B4162}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

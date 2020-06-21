@@ -17,6 +17,6 @@ namespace RowCardGameEngine.Game
 
         Either<string, IGameState> Finish() => "Game is not yet finished.";
 
-        Either<string, IGameState> Reset() => "Game cannot be reset.";
+        Either<string, IGameState> NewGame() => "A new game cannot be started.";
     }
 }

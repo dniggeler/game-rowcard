@@ -16,7 +16,7 @@ namespace RowCardGameEngine.Game
             return new StartGameState(Rnd, GameBoard);
         }
 
-        public Either<string, IGameState> Reset()
+        public Either<string, IGameState> NewGame()
         {
             return new InitialGameState(Rnd);
         }

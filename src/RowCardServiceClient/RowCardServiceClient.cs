@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
-
-namespace TestClient.Console
+namespace RowCardGame
 {
-    public class RowCardServiceClient
+    public class RowCardServiceClient : IRowCardServiceClient
     {
         private readonly string baseAddress;
 

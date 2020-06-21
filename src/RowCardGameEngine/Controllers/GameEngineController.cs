@@ -124,11 +124,11 @@ namespace RowCardGameEngine.Controllers
             return Ok(gameManager.GetEngine(GameEngineId).GetActionHistory());
         }
 
-        [HttpPost("game/reset")]
+        [HttpPost("game/newGame")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult Reset()
+        public ActionResult NewGame()
         {
-            var result = gameManager.GetEngine(GameEngineId).Reset();
+            var result = gameManager.GetEngine(GameEngineId).NewGame();
             return result.Match(
                 Right: id => Ok(id),
                 Left: Ok);

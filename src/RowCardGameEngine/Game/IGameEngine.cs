@@ -23,6 +23,8 @@ namespace RowCardGameEngine.Game
 
         Either<string, GameBoard> GetGameBoard();
 
+        Either<string, int> NewGame();
+
         Either<string, int> Reset();
     }
 }

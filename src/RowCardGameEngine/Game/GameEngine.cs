@@ -160,12 +160,12 @@ namespace RowCardGameEngine.Game
             return gameState.GetGameBoard();
         }
 
-        public Either<string, int> Reset()
+        public Either<string, int> NewGame()
         {
             var gameBoard = createNewGameBoardFunc();
             
             Either<string, IGameState> r =
-                from s in gameState.Reset()
+                from s in gameState.NewGame()
                 from board in gameBoard.Setup(GetPlayers().ToList().AsReadOnly())
                 from newState in s.Setup(board, GetPlayers().Count)
                     select newState;
@@ -175,6 +175,13 @@ namespace RowCardGameEngine.Game
             var result = r.Map(_ => gameId);
 
             return result;
+        }
+
+        public Either<string, int> Reset()
+        {
+            gameState = new InitialGameState(rnd);
+
+            return rnd.Next();
         }
 
         public IReadOnlyCollection<string> GetActionHistory()
