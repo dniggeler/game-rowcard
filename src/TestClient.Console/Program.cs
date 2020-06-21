@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using RowCardGame;
 
-
 namespace TestClient.Console
 {
     class Program

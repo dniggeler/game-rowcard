@@ -133,5 +133,15 @@ namespace RowCardGameEngine.Controllers
                 Right: id => Ok(id),
                 Left: Ok);
         }
+
+        [HttpPost("game/reset")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public ActionResult Reset()
+        {
+            var result = gameManager.GetEngine(GameEngineId).Reset();
+            return result.Match(
+                Right: id => Ok(id),
+                Left: Ok);
+        }
     }
 }

@@ -170,9 +170,11 @@ namespace RowCardGameEngine.Game
                 from newState in s.Setup(board, GetPlayers().Count)
                     select newState;
             
-            actionHistory.Add($"Game {gameId} reset");
-
-            var result = r.Map(_ => gameId);
+            var result = r.Map(_ =>
+            {
+                actionHistory.Add($"Game {gameId} reinitialized");
+                return gameId;
+            });
 
             return result;
         }
@@ -180,8 +182,13 @@ namespace RowCardGameEngine.Game
         public Either<string, int> Reset()
         {
             gameState = new InitialGameState(rnd);
+            players.Clear();
 
-            return rnd.Next();
+            int newGameId = rnd.Next();
+
+            actionHistory.Add($"Game reset to new game ({newGameId})");
+
+            return newGameId;
         }
 
         public IReadOnlyCollection<string> GetActionHistory()
