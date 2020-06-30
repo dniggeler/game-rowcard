@@ -21,9 +21,9 @@ namespace RowCardGameEngine.Tests
 
             // when
             var circularPlayerList = new CircularPlayerList(players, startingPlayerId);
-            circularPlayerList.GetNext();
-            circularPlayerList.GetNext();
-            var result = circularPlayerList.GetNext()
+            circularPlayerList.Next();
+            circularPlayerList.Next();
+            var result = circularPlayerList.Next()
                 .IfNone(-1);
 
             // then

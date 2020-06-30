@@ -25,6 +25,8 @@ namespace RowCardGameEngine.Game
 
         Either<string, int> NewGame();
 
+        Either<string, int> GetNextPlayer();
+
         Either<string, int> Reset();
     }
 }

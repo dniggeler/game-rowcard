@@ -24,7 +24,7 @@ namespace RowCardGameEngine.Game
             this.players = new LinkedList<long>(players);
         }
 
-        public Option<long> GetNext()
+        public Option<long> Next()
         {
             var currentLinkedNode =
                 players.Find(CurrentPlayer);
@@ -44,6 +44,19 @@ namespace RowCardGameEngine.Game
             CurrentPlayer = nextLinkedNode.Value;
 
             return nextLinkedNode.Value;
+        }
+
+        public Option<long> GetCurrent()
+        {
+            var currentLinkedNode =
+                players.Find(CurrentPlayer);
+
+            if (currentLinkedNode == null)
+            {
+                return Option<long>.None;
+            }
+
+            return CurrentPlayer;
         }
     }
 }

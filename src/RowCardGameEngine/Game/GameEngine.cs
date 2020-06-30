@@ -129,7 +129,7 @@ namespace RowCardGameEngine.Game
 
                     gameState = newState;
 
-                    circularPlayerList.GetNext();
+                    circularPlayerList.Next();
 
                     return Unit.Default;
                 });
@@ -149,7 +149,7 @@ namespace RowCardGameEngine.Game
                     actionHistory.Add($"Player {playerId} played card {card.Suit}/{card.Rank}");
                     gameState = newState;
 
-                    circularPlayerList.GetNext();
+                    circularPlayerList.Next();
 
                     return Unit.Default;
                 });
@@ -177,6 +177,11 @@ namespace RowCardGameEngine.Game
             });
 
             return result;
+        }
+
+        public Either<string, int> GetNextPlayer()
+        {
+            throw new NotImplementedException();
         }
 
         public Either<string, int> Reset()
