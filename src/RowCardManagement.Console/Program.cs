@@ -8,7 +8,7 @@ namespace RowCardManagement.Console
     class Program
     {
         private const string ChatHubName = "chatHub";
-        private const string BaseAddress = "https://localhost:44380";
+        private const string BaseAddress = "https://localhost:44340";
 
         static async Task Main(string[] args)
         {
@@ -20,8 +20,8 @@ namespace RowCardManagement.Console
 
             await connection.StartAsync();
 
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri($"{BaseAddress}/api/game/");
+            HttpClient httpClient = new ();
+            httpClient.BaseAddress = new Uri($"{BaseAddress}/api/");
 
             System.Console.WriteLine($"Connection is in state '{connection.State}'");
 
@@ -70,7 +70,7 @@ namespace RowCardManagement.Console
         private static async Task SendMessage(
             string message, HubConnection connection)
         {
-            await connection.InvokeAsync("SendAdminMessage", message);
+            await connection.InvokeAsync("SendNewPlayerMessage", message);
         }
     }
 }

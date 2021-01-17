@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AzulGameEngine.ChatHub.Models;
 using Microsoft.AspNetCore.SignalR;
+using RowCardGameEngine.ChatHub.Models;
 
-namespace AzulGameEngine.ChatHub
+namespace RowCardGameEngine.ChatHub
 {
     public class ChatHub : Hub
     {

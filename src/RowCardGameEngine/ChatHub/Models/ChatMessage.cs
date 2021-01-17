@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AzulGameEngine.ChatHub.Models
+namespace RowCardGameEngine.ChatHub.Models
 {
     public class ChatMessage
     {

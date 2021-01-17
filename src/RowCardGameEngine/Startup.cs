@@ -1,14 +1,10 @@
-using System;
-using System.Text.Json.Serialization;
-using AzulGameEngine.ChatHub;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RowCardGameEngine;
 
-namespace AzulGameEngine
+namespace RowCardGameEngine
 {
     public class Startup
     {
@@ -37,7 +33,7 @@ namespace AzulGameEngine
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Welcome to Azul Game Engine");
+                    await context.Response.WriteAsync("Welcome to Row Card Game");
                 });
 
                 endpoints.MapControllers();

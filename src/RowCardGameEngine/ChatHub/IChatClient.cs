@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AzulGameEngine.ChatHub
+namespace RowCardGameEngine.ChatHub
 {
     public interface IChatClient
     {

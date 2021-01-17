@@ -8,9 +8,9 @@ namespace TestClient.Console
     class Program
     {
         private const string ChatHubName = "chatHub";
-        private const string BaseAddress = "https://localhost:44380";
+        private const string BaseAddress = "https://localhost:44340";
 
-        static async Task Main(string[] _)
+        static async Task Main()
         {
             string url = $"{BaseAddress}/{ChatHubName}";
 
@@ -34,8 +34,7 @@ namespace TestClient.Console
 
             if (connection.State == HubConnectionState.Connected)
             {
-                RowCardServiceClient rowCardServiceClient =
-                    new RowCardServiceClient();
+                RowCardServiceClient rowCardServiceClient = new ();
 
                 bool isProcessing = true;
                 while (isProcessing)

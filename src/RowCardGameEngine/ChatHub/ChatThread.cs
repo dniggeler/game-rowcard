@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using AzulGameEngine.ChatHub.Models;
+using RowCardGameEngine.ChatHub.Models;
 
-namespace AzulGameEngine.ChatHub
+namespace RowCardGameEngine.ChatHub
 {
     public class ChatThread
     {

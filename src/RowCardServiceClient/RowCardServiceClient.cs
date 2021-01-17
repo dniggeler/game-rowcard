@@ -10,7 +10,7 @@ namespace RowCardGame
 
         public RowCardServiceClient()
         {
-            baseAddress = "https://localhost:44380/api/";
+            baseAddress = "https://localhost:44340/api/";
         }
 
         public async Task<long> JoinAsync(string playerName)
