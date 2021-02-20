@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using RowCardGame;
 
 namespace RowCardMgmtApp
@@ -12,10 +13,8 @@ namespace RowCardMgmtApp
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-            builder.Services.AddHttpClient("ServerAPI",
-                client => client.BaseAddress = new Uri("https://www.example.com/base"));
 
-            builder.Services.AddHttpClient(client =>
+            builder.Services.AddHttpClient<IRowCardServiceClient>(client =>
             {
                 client.BaseAddress = builder.Configuration.GetServiceUri("game-service");
             });
