@@ -6,19 +6,17 @@ namespace RowCardGame
 {
     public class RowCardServiceClient : IRowCardServiceClient
     {
+        private readonly HttpClient httpClient;
         private readonly string baseAddress;
 
-        public RowCardServiceClient()
+        public RowCardServiceClient(HttpClient httpClient)
         {
-            baseAddress = "https://localhost:44340/api/";
+            this.httpClient = httpClient;
         }
 
         public async Task<long> JoinAsync(string playerName)
         {
             string addPlayerPath = $"players/{playerName}";
-
-            using HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri($"{baseAddress}");
 
             var response = await httpClient.PostAsync(addPlayerPath, null);
 
@@ -34,9 +32,6 @@ namespace RowCardGame
         {
             string gamePath = "game";
 
-            using HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri($"{baseAddress}");
-
             var response = await httpClient.PostAsync(gamePath, null);
 
             if (response.IsSuccessStatusCode)
@@ -51,9 +46,6 @@ namespace RowCardGame
         {
             string gamePath = $"game/setStartingPlayer?playerId={playerId}";
 
-            using HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri($"{baseAddress}");
-
             var response = await httpClient.PostAsync(gamePath, null);
 
             return response.ToString();
@@ -62,9 +54,6 @@ namespace RowCardGame
         public async Task<string> ResetAsync()
         {
             string gamePath = "game/reset";
-
-            using HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri($"{baseAddress}");
 
             var response = await httpClient.PostAsync(gamePath, null);
 

@@ -6,7 +6,7 @@
 #
 name: rowcard
 services:
-- name: rowcardgameengine
+- name: game-service
   project: RowCardGameEngine/RowCardGameEngine.csproj
-- name: rowcardmgmtapp
+- name: admin-frontend
   project: RowCardMgmtApp/RowCardMgmtApp.csproj
