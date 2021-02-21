@@ -9,4 +9,4 @@ services:
 - name: game-service
   project: RowCardGameEngine/RowCardGameEngine.csproj
 - name: admin-frontend
-  project: RowCardMgmtApp/RowCardMgmtApp.csproj
+  project: RowCardAdminServerApp/RowCardAdminServerApp.csproj

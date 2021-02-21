@@ -14,10 +14,10 @@ namespace RowCardMgmtApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddHttpClient<IRowCardServiceClient>(client =>
-            {
-                client.BaseAddress = builder.Configuration.GetServiceUri("game-service");
-            });
+            //builder.Services.AddHttpClient<IRowCardServiceClient>(client =>
+            //{
+            //    client.BaseAddress = new Uri(@"https://localhost");
+            //});
 
             await builder.Build().RunAsync();
         }
