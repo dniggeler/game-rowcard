@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RowCardGame
@@ -7,7 +8,6 @@ namespace RowCardGame
     public class RowCardServiceClient : IRowCardServiceClient
     {
         private readonly HttpClient httpClient;
-        private readonly string baseAddress;
 
         public RowCardServiceClient(HttpClient httpClient)
         {
@@ -58,6 +58,15 @@ namespace RowCardGame
             var response = await httpClient.PostAsync(gamePath, null);
 
             return response.ToString();
+        }
+
+        public async Task<string> GetStatusAsync()
+        {
+            string gamePath = "game/status";
+
+            var response = await httpClient.GetStringAsync(gamePath, CancellationToken.None);
+
+            return response;
         }
     }
 }

@@ -22,5 +22,10 @@ namespace RowCardGameEngine.Game
         {
             return new InitialGameState(Rnd);
         }
+
+        public GameStatus GetStatus()
+        {
+            return GameStatus.Playing;
+        }
     }
 }

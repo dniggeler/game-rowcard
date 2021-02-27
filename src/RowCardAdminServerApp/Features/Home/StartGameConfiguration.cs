@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RowCardAdminServerApp.Features.StartGame
+namespace RowCardAdminServerApp.Features.Home
 {
     public class StartGameConfiguration
     {

@@ -11,5 +11,7 @@ namespace RowCardGame
         Task<string> SetStartingPlayerAsync(long playerId);
 
         Task<string> ResetAsync();
+
+        Task<string> GetStatusAsync();
     }
 }

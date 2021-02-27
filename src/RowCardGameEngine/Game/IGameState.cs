@@ -18,5 +18,7 @@ namespace RowCardGameEngine.Game
         Either<string, IGameState> Finish() => "Game is not yet finished.";
 
         Either<string, IGameState> NewGame() => "A new game cannot be started.";
+
+        GameStatus GetStatus();
     }
 }

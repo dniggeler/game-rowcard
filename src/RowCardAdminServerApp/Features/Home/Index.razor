@@ -1,0 +1,46 @@
+﻿@page "/"
+@using RowCardGame
+@using RowCardAdminServerApp.Features.Home
+@inject IRowCardServiceClient GameServiceClient
+
+<h1>Row Card Management Site</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <StartGameForm Configuration="@configuration" StartGameCallback="HandleValidSubmit" />
+        </div>
+        <div class="col-3">
+            <GameStatus Status="status"></GameStatus>
+        </div>
+    </div>
+    
+</div>
+
+@code {
+
+
+    private readonly StartGameConfiguration configuration = new();
+    private string status = "Not initialized";
+
+    private Task HandleValidSubmit()
+    {
+        Console.WriteLine($"Start game with {configuration.NumberOfPlayers} and with {configuration.NumberOfRealPlayers} real players");
+
+        return Task.CompletedTask;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            status = await GameServiceClient.GetStatusAsync();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem reaching the game service: {ex.Message}");
+            status = "service not available";
+        }
+    }
+
+}

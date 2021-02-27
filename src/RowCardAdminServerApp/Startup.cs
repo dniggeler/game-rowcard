@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +22,7 @@ namespace RowCardAdminServerApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.Configure<RazorPagesOptions>(options => options.RootDirectory = "/Features");
             services.AddServerSideBlazor();
 
             services.AddHttpClient<IRowCardServiceClient>(client =>
@@ -49,7 +51,8 @@ namespace RowCardAdminServerApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapFallbackToPage("/Features/_Host");
             });
         }
     }
