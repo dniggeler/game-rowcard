@@ -28,5 +28,8 @@ namespace RowCardGameEngine.Game
         Either<string, int> GetNextPlayer();
 
         Either<string, int> Reset();
+
+        GameStatus GetStatus();
+
     }
 }

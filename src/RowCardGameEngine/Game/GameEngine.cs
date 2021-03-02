@@ -17,10 +17,9 @@ namespace RowCardGameEngine.Game
 
         private IGameState gameState;
 
-        private readonly ConcurrentDictionary<long, Player> players =
-            new ConcurrentDictionary<long, Player>();
+        private readonly ConcurrentDictionary<long, Player> players = new();
 
-        private readonly List<string> actionHistory = new List<string>();
+        private readonly List<string> actionHistory = new();
 
         public GameEngine(Random rnd, Func<GameBoard> createBoardFunc)
         {
@@ -194,6 +193,11 @@ namespace RowCardGameEngine.Game
             actionHistory.Add($"Game reset to new game ({newGameId})");
 
             return newGameId;
+        }
+
+        public GameStatus GetStatus()
+        {
+            return gameState.GetStatus();
         }
 
         public IReadOnlyCollection<string> GetActionHistory()

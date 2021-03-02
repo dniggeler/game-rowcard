@@ -1,9 +1,8 @@
 ﻿@page "/"
 @using RowCardGame
-@using RowCardAdminServerApp.Features.Home
-@inject IRowCardServiceClient GameServiceClient
+@inject RowCardServiceClient GameServiceClient
 
-<h1>Row Card Management Site</h1>
+<h1>Row Card Management</h1>
 
 <div class="container">
     <div class="row">
@@ -11,7 +10,7 @@
             <StartGameForm Configuration="@configuration" StartGameCallback="HandleValidSubmit" />
         </div>
         <div class="col-3">
-            <GameStatus Status="status"></GameStatus>
+            <GameStatus Status="@gameServiceStatus"></GameStatus>
         </div>
     </div>
     
@@ -21,7 +20,7 @@
 
 
     private readonly StartGameConfiguration configuration = new();
-    private string status = "Not initialized";
+    private string gameServiceStatus = "Not initialized";
 
     private Task HandleValidSubmit()
     {
@@ -34,12 +33,12 @@
     {
         try
         {
-            status = await GameServiceClient.GetStatusAsync();
+            gameServiceStatus = await GameServiceClient.GetStatusAsync();
         }
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"There was a problem reaching the game service: {ex.Message}");
-            status = "service not available";
+            gameServiceStatus = "service not available";
         }
     }
 

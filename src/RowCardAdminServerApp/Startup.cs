@@ -24,9 +24,10 @@ namespace RowCardAdminServerApp
             services.AddRazorPages();
             services.Configure<RazorPagesOptions>(options => options.RootDirectory = "/Features");
             services.AddServerSideBlazor();
-
-            services.AddHttpClient<IRowCardServiceClient>(client =>
+            services.AddTransient<IRowCardServiceClient, RowCardServiceClient>();
+            services.AddHttpClient<RowCardServiceClient>(client =>
                 client.BaseAddress = Configuration.GetServiceUri("game-service"));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +53,7 @@ namespace RowCardAdminServerApp
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapFallbackToPage("/Features/_Host");
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }

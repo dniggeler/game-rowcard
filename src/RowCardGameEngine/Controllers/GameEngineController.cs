@@ -143,5 +143,12 @@ namespace RowCardGameEngine.Controllers
                 Right: id => Ok(id),
                 Left: Ok);
         }
+
+        [HttpGet("game/status")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult Status()
+        {
+            return Ok(gameManager.GetEngine(GameEngineId).GetStatus());
+        }
     }
 }

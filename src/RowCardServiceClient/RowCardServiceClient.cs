@@ -7,6 +7,8 @@ namespace RowCardGame
 {
     public class RowCardServiceClient : IRowCardServiceClient
     {
+        private const string RelativePathPart = "api/game";
+
         private readonly HttpClient httpClient;
 
         public RowCardServiceClient(HttpClient httpClient)
@@ -30,7 +32,7 @@ namespace RowCardGame
 
         public async Task<int> CreateGameAsync()
         {
-            string gamePath = "game";
+            string gamePath = RelativePathPart;
 
             var response = await httpClient.PostAsync(gamePath, null);
 
@@ -44,7 +46,7 @@ namespace RowCardGame
 
         public async Task<string> SetStartingPlayerAsync(long playerId)
         {
-            string gamePath = $"game/setStartingPlayer?playerId={playerId}";
+            string gamePath = $"{RelativePathPart}/setStartingPlayer?playerId={playerId}";
 
             var response = await httpClient.PostAsync(gamePath, null);
 
@@ -53,7 +55,7 @@ namespace RowCardGame
 
         public async Task<string> ResetAsync()
         {
-            string gamePath = "game/reset";
+            string gamePath = $"{RelativePathPart}/reset";
 
             var response = await httpClient.PostAsync(gamePath, null);
 
@@ -62,7 +64,7 @@ namespace RowCardGame
 
         public async Task<string> GetStatusAsync()
         {
-            string gamePath = "game/status";
+            string gamePath = $"{RelativePathPart}/status";
 
             var response = await httpClient.GetStringAsync(gamePath, CancellationToken.None);
 
